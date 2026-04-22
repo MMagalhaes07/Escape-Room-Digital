@@ -1,0 +1,121 @@
+/**
+ * GamePage Styles
+ */
+
+.game-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--spacing-2xl) var(--spacing-lg);
+  min-height: calc(100vh - 80px);
+}
+
+.game-content {
+  background: white;
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-2xl);
+  box-shadow: var(--shadow-md);
+  text-align: center;
+}
+
+.game-content h1 {
+  font-size: 2rem;
+  margin-bottom: var(--spacing-lg);
+  color: var(--primary);
+}
+
+.game-content p {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-lg);
+}
+
+.game-content ul {
+  text-align: left;
+  display: inline-block;
+  margin-bottom: var(--spacing-2xl);
+  color: var(--text-secondary);
+}
+
+.game-content li {
+  margin-bottom: var(--spacing-sm);
+  font-family: monospace;
+}
+
+/* Placeholder para renderização futura do jogo */
+.scene-container {
+  background: linear-gradient(
+    135deg,
+    var(--bg-secondary) 0%,
+    var(--bg-tertiary) 100%
+  );
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-2xl);
+  margin-bottom: var(--spacing-lg);
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.scene-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: var(--spacing-md);
+  color: var(--text-primary);
+}
+
+.scene-text {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  text-align: center;
+  max-width: 600px;
+}
+
+/* Choices Container */
+.choices-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-lg);
+  margin-top: var(--spacing-lg);
+}
+
+.choice-button {
+  padding: var(--spacing-lg);
+  background: white;
+  border: 2px solid var(--primary);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  text-align: left;
+}
+
+.choice-button:hover {
+  background: var(--primary);
+  color: white;
+  transform: translateX(10px);
+}
+
+/* Inventory Sidebar */
+.game-sidebar {
+  position: fixed;
+  right: 0;
+  top: 80px;
+  width: 300px;
+  background: white;
+  height: calc(100vh - 80px);
+  box-shadow: var(--shadow-lg);
+  padding: var(--spacing-lg);
+  overflow-y: auto;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .game-container {
+    padding: var(--spacing-lg);
+  }
+
+  .game-sidebar {
+    display: none;
+  }
+}
