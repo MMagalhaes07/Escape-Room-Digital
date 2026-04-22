@@ -1,0 +1,213 @@
+{
+  "name": "O Clout da Crueldade: Pressão e Paralisia",
+  "ifid": "scenario-2-clout",
+  "creator": "Twine",
+  "creatorVersion": "2.4.1",
+  "schemaVersion": 1,
+  "formatVersion": 1,
+  "format": "Harlowe",
+  "passages": [
+    {
+      "pid": "1",
+      "name": "inicio_scenario2",
+      "text": "# O Clout da Crueldade: Pressão e Paralisia\n\n**Cenário 2 - Perspetiva do Agressor/Reforçador**\n\nVocê é **Tiago** (ou Catarina - escolha seu papel). É sexta-feira e você está em casa, scrollando no Discord/WhatsApp.\n\nDe repente, surge uma **nova partilha no grupo de gaming**: uma foto distorcida da **Bia** da sua turma, com o caption: \"Que cringe!\"\n\n**O grupo explode em reações:**\n- 27 risadas\n- 15 comentários ofensivos\n- Notificações a aparecer a cada 2 segundos\n\n**Seu coração bate acelerado.** Você sabe quem é a Bia. Ela sentou-se ao seu lado uma vez na aula.\n\nMas agora o grupo quer **sua atenção**. Quer saber o que você vai dizer.\n\n**Bem-vindo ao dilema do \"Clout\" - o estatuto social obtido através de reações agressivas.**\n\n*Nota: Este cenário simula mensagens em tempo real. Você terá 10 segundos para responder antes que o grupo continuar sem você.*",
+      "tags": "start, chat, cyberbullying, agressor",
+      "stateInit": {
+        "cloutScore": 0,
+        "empathyScore": 50,
+        "groupPressure": 0,
+        "timeElapsed": 0,
+        "messagesReceived": 0,
+        "characterRole": "agressor"
+      },
+      "mechanics": "Real-time simulation with timer",
+      "links": [
+        {
+          "linkText": "Começar",
+          "target": "first_message_arrives",
+          "empathyScore": 50
+        }
+      ]
+    },
+    {
+      "pid": "2",
+      "name": "first_message_arrives",
+      "text": "# Momento 1: A Foto Chega\n\n**[14:32] Lucas (Admin do Grupo):**\n```\nEi galera, olhem para isto 😂😂😂\n[FOTO DISTORCIDA DE BIA]\n```\n\n**[14:32] João:**\n```\nQue cringe HAHA\n```\n\n**[14:33] Catarina:**\n```\nLol deveria meter isto como profile pic dela 💀\n```\n\n**[14:33] MUITAS MENSAGENS APARECEM**\n\n---\n\n## O Momento da Decisão\n\nVocê está a ver isto acontecer em tempo real. **O grupo está à espera de você dizer algo.**\n\nLucas até marcou seu nome:\n**[14:34] Lucas:** \"@Tiago, o que achas?\"\n\n**TERMÓMETRO DE CLOUT:**\n```\nClout Atual: 45/100\n(Você é neutro agora. Cada ação vai aumentar ou diminuir isto)\n```\n\n**Como você REAGE?**",
+      "tags": "chat_scenario, decision_point",
+      "timePressure": 10,
+      "links": [
+        {
+          "linkText": "\"LACRAR\" - Enviar comentário agressivo (ex: emoji de riso malvado)",
+          "target": "choice_lacrar",
+          "empathyScore": 10,
+          "cloutScore": 40,
+          "consequence": "aggressive_participation"
+        },
+        {
+          "linkText": "Enviar emoji neutro (😐) para não se envolver",
+          "target": "choice_emoji_neutro",
+          "empathyScore": 35,
+          "cloutScore": 5,
+          "consequence": "passive_participation"
+        },
+        {
+          "linkText": "Ignorar a mensagem completamente",
+          "target": "choice_ignore",
+          "empathyScore": 50,
+          "cloutScore": -10,
+          "consequence": "neutrality"
+        },
+        {
+          "linkText": "Enviar mensagem privada a Bia",
+          "target": "choice_private_message_bia",
+          "empathyScore": 85,
+          "cloutScore": -30,
+          "consequence": "empathy_path"
+        }
+      ]
+    },
+    {
+      "pid": "3",
+      "name": "choice_lacrar",
+      "text": "# Sua Ação: Lacração Agressiva\n\n**Você digita:**\n```\n[14:34] Você: \"Hahahaha que ridícula 💀😂\"\n```\n\n---\n\n## Reação Imediata\n\n**[14:35] Lucas:** \"AHHHH! Ele entrou! Agora sim 🔥\"\n\n**[14:35] João:** \"Tiago tá selvagem hoje lol\"\n\n**[14:35] Catarina:** \"Amigo, meteste-te nos tronos 👑\"\n\n**[14:36] 15 RISADAS NAS SUAS MENSAGENS**\n\n**Termómetro de Clout aumenta: 45 → 65**\n\n---\n\n## Mas Há Um Custo...\n\nDe repente, você recebe uma **notificação privada de um contacto que não esperava:**\n\n**[14:36] Desconhecido (é um número privado da turma):**\n```\nSabias que o que estão a fazer é asséio?\nA Bia viu tudo.\nEla acabou de enviar prints para a escola.\nA direcção está a investigar.\n```\n\n**Seu coração dispara.**\n\n**Termómetro de Arrependimento aparece: 30/100**\n\n---\n\n**O que faz agora?**",
+      "tags": "consequences, pressure, regret",
+      "links": [
+        {
+          "linkText": "Apagar a mensagem rapidamente",
+          "target": "choice_damage_control",
+          "empathyScore": 25
+        },
+        {
+          "linkText": "Contactar Bia para pedir desculpas",
+          "target": "choice_apologize_bia",
+          "empathyScore": 70
+        },
+        {
+          "linkText": "Procurar Lucas para descobrir o que a escola sabe",
+          "target": "choice_find_lucas",
+          "empathyScore": 40
+        }
+      ]
+    },
+    {
+      "pid": "4",
+      "name": "choice_emoji_neutro",
+      "text": "# Sua Ação: Passividade com Emoji\n\n**Você digita:**\n```\n[14:34] Você: \"😐\"\n```\n\n---\n\n## Reação do Grupo\n\n**[14:35] Lucas:** \"Oi, esse emoji quer dizer o quê?\"\n\n**[14:36] João:** \"Ele não quer meter-se 😂\"\n\n**[14:36] Catarina:** \"Ainda bem, nunca tens coragem mesmo\"\n\n**Clout Score aumenta ligeiramente: 45 → 50**\n\nMas você **não é alvo de crítica direta**. O grupo continua sem você.\n\n---\n\n## 20 Minutos Depois...\n\nO vídeo da Bia está a ser partilhado para **TikTok, Instagram e Twitter**.\n\n**Notificação:**\n```\nTeu vídeo alcançou 2.5K visualizações\n[Link do vídeo]\n```\n\nVocê vê um comentário:\n**\"Que rapariga 💀\"** - Likes: 347\n\n**Seu arrependimento:** 45/100\n\nVocê não foi agressivo. Mas também não parou nada.\n\n**O que faz?**",
+      "tags": "escalation, passive_guilt",
+      "links": [
+        {
+          "linkText": "Finalmente defender a Bia online",
+          "target": "choice_late_defense",
+          "empathyScore": 55
+        },
+        {
+          "linkText": "Enviar mensagem privada a Bia",
+          "target": "choice_private_message_bia",
+          "empathyScore": 75
+        },
+        {
+          "linkText": "Continuar a fingir que não te importas",
+          "target": "choice_denial",
+          "empathyScore": 20
+        }
+      ]
+    },
+    {
+      "pid": "5",
+      "name": "choice_ignore",
+      "text": "# Sua Ação: Ignorar Completamente\n\nVocê vê as mensagens mas **decide não responder**. Fecha a app.\n\n**Clout Score diminui: 45 → 35**\n\nMas na sua cabeça:\n\"Não é meu problema. Deixa lá.\"\n\n---\n\n## Horas Depois...\n\nVocê está a fazer TPC quando recebe **uma notificação escolar:**\n\n```\n[AVISO DA ESCOLA]\n\nAssunto: Investigação de Bullying Online\n\nEstamos a investigar um caso de cyberbullying contra uma aluna.\nSe tem informações sobre participantes ou testemunhas,\nfaça favor de responder a este e-mail.\n\nAtentamente,\nDireção da Escola\n```\n\n**Seu nome aparece na lista de pessoas que poderiam ter sido alertadas.**\n\n**Arrependimento: 60/100**\n\nVocê sabe que o seu silêncio é cumplicidade.\n\n**O que faz?**",
+      "tags": "silence_consequence",
+      "links": [
+        {
+          "linkText": "Contactar a Direção com informações",
+          "target": "choice_report_to_school",
+          "empathyScore": 65
+        },
+        {
+          "linkText": "Contactar Bia directamente",
+          "target": "choice_private_message_bia",
+          "empathyScore": 75
+        },
+        {
+          "linkText": "Ignorar o aviso também",
+          "target": "choice_denial",
+          "empathyScore": 10
+        }
+      ]
+    },
+    {
+      "pid": "6",
+      "name": "choice_private_message_bia",
+      "text": "# Sua Ação: Mensagem Privada à Bia\n\nVocê toma uma respiração profunda e **contacta Bia directamente**.\n\n**Você:**\n```\nOi Bia. Desculpa por tudo isto.\nNão devia deixar que fizessem isto.\nSe precisares de falar, estou aqui.\n```\n\n**Bia (demora 2 minutos a responder):**\n```\nPorquê é que te importas agora?\nMeia turma viu-me humilhada.\nTu também riste.\n```\n\n---\n\n## O Dilema da Redenção\n\nEla tem razão. Você riste (ou deixou rir).\n\nMas agora tem uma escolha:\n\n**Opção A:** Defender-se (\"Não, eu nunca risse\")\n**Opção B:** Ser honesto (\"Tens razão. Foi errado. Quero ajudar agora.\")\n\n**Você escolhe ser honesto.**\n\n**Você:**\n```\nTens razão. Fui covarde.\nMas quero ajudar agora.\nDocumentei tudo. Posso ajudar a reportar.\n```\n\n---\n\n## Mudança de Dinâmica\n\n**Bia:**\n```\nSério?\nPorquê mudaste de ideias?\n```\n\n**Você:**\n```\nPorque vi o que fiz contribuir.\nE vejo como isto te está a afetar.\nNão é aceitável.\n```\n\n**[30 segundos de espera]**\n\n**Bia:**\n```\nOk. Obrigada.\nTalvez possamos trabalhar juntos nisto.\n```\n\n---\n\n## Consequências\n\n**Empathy Score: 85/100**\n**Clout Score: -40 (perdeu estatuto, mas ganhou respeito genuíno)**\n**Aliança: Bia**\n\n**Próxima Decisão: Como procedem?**",
+      "tags": "redemption, alliance",
+      "links": [
+        {
+          "linkText": "Usar o Protocolo TELL com Bia como testemunha",
+          "target": "choice_tell_with_bia",
+          "empathyScore": 90
+        },
+        {
+          "linkText": "Sair do grupo de chat",
+          "target": "choice_leave_group",
+          "empathyScore": 80
+        }
+      ]
+    },
+    {
+      "pid": "7",
+      "name": "choice_tell_with_bia",
+      "text": "# Decisão: Protocolo TELL com Bia\n\nVocê e Bia decidem usar o **Protocolo TELL** para parar o bullying estruturalmente.\n\n## 1. **Guardar Provas** ✓\n- Você recolhe todos os prints das mensagens\n- Bia preserva os vídeos partilhados\n- Documentam data, hora e plataformas\n\n## 2. **Bloquear os Agressores** ✓\n- Bia bloqueia todos os participantes no Discord\n- Reporta os vídeos nas redes sociais\n- Limpa seu perfil de qualquer ligação\n\n## 3. **Reportar Formalmente** ✓\n- Você e Bia vão juntos à Direção\n- Apresentam as provas\n- Pedem intervenção disciplinar\n\n## 4. **Falar com Adultos de Confiança** ✓\n- Pais de Bia contactam a escola\n- Direção inicia procedimento contra Lucas, João e Catarina\n- Implementam-se medidas de proteção\n\n---\n\n## O Seu Papel\n\nVocê **testemunhou**. Você **hesitou**. Mas **agiu.**\n\nA Direção reconhece seu papel como **conversor**.\n\n**DESFECHO: \"O Redentor\"**\n\n**Pontuação Final:**\n- Empathy Score: 85/100\n- Clout Score: -40 (perdeu estatuto, mas ganhou integridade)\n- Jornada: De agressor a aliado\n- Impacto: Alto\n\n**Feedback Pedagógico:**\n\"Você começou como reforçador de bullying. Mas reconheceu o erro e mudou. Esta é a trajetória mais importante de todas - a redenção. A mudança é sempre possível.\"\n\n**Lições Aprendidas:**\n1. Clout baseado em crueldade é falso\n2. A verdadeira amizade não requer humilhar outros\n3. Pode sempre mudar de rumo\n4. Alianças genuínas são mais valiosas que estatuto social\n5. Bia pode perdoar, mas a escola não esquece",
+      "tags": "ending, redemption_success",
+      "links": []
+    },
+    {
+      "pid": "8",
+      "name": "choice_leave_group",
+      "text": "# Decisão: Sair do Grupo de Chat\n\nAcabou. Você não consegue ficar num grupo onde isto acontece.\n\n**Você envia uma mensagem no grupo:**\n\n```\n[15:47] Você:\n\"Estou a sair do grupo.\nO que fizemos à Bia é inaceitável.\nVou reportar isto à escola.\nAdeus.\"\n```\n\n**Você sai.**\n\n---\n\n## Reação do Grupo\n\n**[15:48] Lucas:** \"Afff, agora virou herói?\"\n\n**[15:48] João:** \"Deixa-o ir, mais um para apagar.\"\n\n**[15:49] Catarina:** \"Lol, deve gostar da Bia mesmo 💀\"\n\n---\n\n## Consequências\n\nVocê **perdeu amigos**. Seu clout **desapareceu completamente**.\n\nMas você **ganhou** integridade.\n\nVocê contacta a Direção da Escola com as provas.\n\n---\n\n## DESFECHO: \"O Deserto\"**\n\nVocê se tornou **um pária no seu círculo social**.\n\nMas Bia está segura. O bullying parou.\n\n**Pontuação Final:**\n- Empathy Score: 80/100\n- Clout Score: -80 (completamente isolado socialmente)\n- Sacrifício Pessoal: Alto\n- Impacto: Máximo\n\n**Feedback Pedagógico:**\n\"Você pagou o preço máximo por fazer o certo. No mundo real, isto às vezes acontece. Pessoas que se opõem ao grupo são frequentemente isoladas. Mas você salvou uma vida. Pergunté: foi valioso?\"\n\n**Questão Reflexiva:**\n\"Se todos estivessem dispostos a pagar este preço, o bullying não existiria.\n Mas muito poucos estão.\nVocê está?\"",
+      "tags": "ending, sacrifice",
+      "links": []
+    },
+    {
+      "pid": "9",
+      "name": "choice_damage_control",
+      "text": "# Sua Ação: Apagar Mensagem\n\nVocê entra em pânico.\n\n**Rápido, apaga a mensagem!**\n\n**[14:37] Você: [mensagem apagada]**\n\nMas é **demasiado tarde**.\n\nLucas já tinha feito screenshot.\n**[14:37] Lucas:** \"Não consegues esconder isto 😂\"\n\nEle mostra o screenshot ao grupo todo.\n\n---\n\n## A Realidade Internet\n\n**\"O que é postado, não pode ser apagado.\"**\n\nSeu nome está ligado ao bullying. Apagar a mensagem não muda isso.\n\n**Bia viu o screenshot.**\n\n---\n\n## DESFECHO: \"O Culpado Covarde\"**\n\nVocê não se confronta. Tenta fugir. Mas a verdade fica.\n\n**Pontuação Final:**\n- Empathy Score: 15/100\n- Culpa: 95/100\n- Reputação: Destruída\n- Aprendizado: O pior possível\n\n**Feedback Pedagógico:**\n\"Você aprendeu a lição mais dura: na era digital, é impossível esconder. Suas ações deixam traços. E apagar a mensagem não apaga a culpa.\"",
+      "tags": "ending, coward_path",
+      "links": []
+    },
+    {
+      "pid": "10",
+      "name": "choice_denial",
+      "text": "# Sua Ação: Negação Contínua\n\nVocê ignora tudo.\n\nOs aviso da escola. A culpa. As mensagens de Bia.\n\n**Você finge que nada aconteceu.**\n\n---\n\n## Mas o Universo Não Esquece\n\n**[Uma semana depois]**\n\nVocê volta à escola e descobre:\n\n1. **Bia tentou suicídio** (foi hospitalizada, mas está viva)\n2. **Investigação escolar formal** contra Lucas, João, Catarina e **você**\n3. **Seus pais foram contactados**\n4. **Procedimento disciplinar iniciado**\n\n---\n\n## A Verdadeira Realidade\n\nVocê contribuiu para o sofrimento de uma pessoa. E agora enfrenta **consequências reais**:\n- Suspensão de 2 semanas\n- Mandado de conselhoria obrigatório\n- Marca permanente no histórico escolar\n- Seus amigos também em problemas\n\n---\n\n## DESFECHO: \"O Peso do Silêncio\"**\n\nVocê pensou que ignorar era \"sair fora\". Mas a inação é uma forma de ação.\n\n**Pontuação Final:**\n- Empathy Score: 5/100\n- Culpa: 100/100\n- Consequências: Reais e Permanentes\n- Aprendizado: Duro e Doloroso\n\n**Feedback Pedagógico:**\n\"O silêncio mata. Literalmente. Bia quase morreu enquanto você fingiu que nada acontecia. Este é o final mais sombrio, mas também o mais verdadeiro ao mundo real.\"",
+      "tags": "ending, denial_failure",
+      "links": []
+    },
+    {
+      "pid": "11",
+      "name": "choice_late_defense",
+      "text": "# Sua Ação: Defesa Tardia Online\n\n**[20:45] Você post no grupo:**\n```\n\"Ei pessoal, acho que isto foi longe demais.\nA Bia não merecia isto.\nDevemos parar.\"\n```\n\n---\n\n## Reação\n\n**[20:46] Lucas:** \"Ahh, agora vira super herói? Tarde demais bro.\"\n\n**[20:46] João:** \"Acredita que estou a ignorar este gajo.\"\n\n**[20:47] Catarina:** \"Sempre a mesma história com ele.\"\n\n---\n\n## Verdade Desconfortável\n\nSeu comentário \"tardio\" é **visto como performativo** (faz-se de bom para parecer bem).\n\nNinguém acredita em mudanças de ideias tardias.\n\n**Bia recebe print da sua \"defesa\" tardia:**\n\n**Bia (no privado):**\n```\nPorquê esperar até haver 5K visualizações?\nPorquê não disseste isto quando começou?\n```\n\nVocê não tem resposta.\n\n---\n\n## DESFECHO: \"O Arrependido Tardio\"**\n\nVocê \"fez o certo\" mas demasiado tarde.\n\n**Pontuação Final:**\n- Empathy Score: 45/100\n- Integridade: Questionada\n- Credibilidade: Baixa\n- Lição: O tempo importa\n\n**Feedback Pedagógico:**\n\"Melhor tarde do que nunca. Mas o timing importa. Bia sofreu enquanto você hesitava. Sua defesa tardia não apaga esse sofrimento.\"",
+      "tags": "ending, late_redemption",
+      "links": []
+    },
+    {
+      "pid": "12",
+      "name": "choice_find_lucas",
+      "text": "# Sua Ação: Procurar Lucas para Informação\n\nVocê precisa saber **o que a escola sabe exatamente**.\n\nVocê tenta contactar Lucas, mas:\n\n**[14:45] Lucas (online):**\n```\nNão posso falar contigo agora.\nA direção me chamou.\nEstou a tentar não picar na história.\n```\n\nEle deixa você no vácuo.\n\n---\n\n## O Pânico Cresce\n\nVocê está preso numa **espiral de culpa e medo**:\n- Medo do que a escola vai fazer\n- Culpa por ter participado\n- Raiva por Lucas não te avisar antes\n\n**Isto leva a mais 48 horas de ansiedade total.**\n\n---\n\n## DESFECHO: \"O Conspirador Preso\"**\n\nVocê continua com os outros conspiradores, tentando coordenar histórias.\n\nMas a investigação escolar é **muito mais rápida e eficiente**.\n\nSua tentativa de \"descobrir informação\" parece **suspeita**.\n\n**Pontuação Final:**\n- Empathy Score: 20/100\n- Sua Posição: Piorada\n- Lealdade ao Grupo: Questionada\n- Desfecho: Pior\n\n**Feedback Pedagógico:**\n\"Você tentou proteger-se a si mesmo em vez de proteger a vítima. Isto deixou você ainda mais vulnerável.\"",
+      "tags": "ending, conspiracy_failure",
+      "links": []
+    },
+    {
+      "pid": "13",
+      "name": "choice_apologize_bia",
+      "text": "# Sua Ação: Apologia Genuína à Bia\n\n**Você toma a decisão mais difícil:**\n\nContacta Bia **imediatamente**:\n\n**Você:**\n```\nBia, eu sinto muito.\nFui covarde e cruel.\nNão há desculpa para o que fiz.\nQuero ajudar a parar isto.\n```\n\n**Bia demora 5 minutos a responder:**\n\n```\nPorquê? O que mudou?\n```\n\n**Você:**\n```\nNada mudou em mim.\nMas tudo mudou em ti.\nVi o resultado do que fiz.\nE não consigo viver com isto.\n```\n\n---\n\n## A Ponte da Culpa\n\nBia percebe que você **genuinamente está arrependido**.\n\nNão é uma desculpa vazia. É **verdadeiro sacrifício emocional**.\n\n**Bia:**\n```\nEst bem.\nPreciso de ajuda a reportar isto.\nPodes ajudar?\n```\n\n**Você:**\n```\nSim. Tudo o que precisares.\n```\n\n---\n\n## DESFECHO: \"O Culpado Redimido\"**\n\nVocê reconhece o erro. Bia perdoa.\n\nJuntos, usam o Protocolo TELL para parar o bullying.\n\n**Pontuação Final:**\n- Empathy Score: 88/100\n- Redenção: Genuína\n- Reparação: Ativa\n- Crescimento: Profundo\n\n**Feedback Pedagógico:**\n\"Este é o caminho mais humano. Você reconheceu o mal que fez. Pediu desculpas genuínas. Agora está a reparar. Esta é verdadeira maturidade.\"",
+      "tags": "ending, genuine_redemption",
+      "links": []
+    },
+    {
+      "pid": "14",
+      "name": "choice_report_to_school",
+      "text": "# Sua Ação: Reportar à Escola\n\nVocê envia um e-mail para a Direção:\n\n**Assunto: Informação sobre Caso de Cyberbullying**\n\n```\nPreciso reportar informações sobre o caso de bullying online.\n\nEstava no grupo de chat quando tudo começou.\nNão participei ativamente, mas vi tudo acontecer.\n\nPosso fornecer todos os detalhes, nomes e prints.\n```\n\n---\n\n## Resposta Rápida\n\n**[Próximo dia]**\n\nA Direção o chama para uma reunião.\n\nVocê fornece toda a informação. Seu depoimento é **crucial** para a investigação.\n\n---\n\n## DESFECHO: \"O Testemunha Responsável\"**\n\nVocê não foi herói. Mas foi responsável.\n\n**Pontuação Final:**\n- Empathy Score: 70/100\n- Integridade: Restaurada\n- Contribuição: Significativa\n- Posição Social: Equilibrada\n\n**Feedback Pedagógico:**\n\"Você encontrou o meio-termo. Não participou ativamente no bullying. Quando apercebeu, reportou. Este é o caminho da maioria das pessoas boas que estão em situações ruins.\"",
+      "tags": "ending, witness_path",
+      "links": []
+    }
+  ]
+}

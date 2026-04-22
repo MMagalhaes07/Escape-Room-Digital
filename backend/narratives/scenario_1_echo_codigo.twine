@@ -1,0 +1,199 @@
+{
+  "name": "O Eco do Código: Sombras no Corredor",
+  "ifid": "scenario-1-echo",
+  "creator": "Twine",
+  "creatorVersion": "2.4.1",
+  "schemaVersion": 1,
+  "formatVersion": 1,
+  "format": "Harlowe",
+  "passages": [
+    {
+      "pid": "1",
+      "name": "inicio",
+      "text": "# O Eco do Código: Sombras no Corredor\n\n**Cenário 1 - Perspetiva da Testemunha (Espetador)**\n\nVocê é **Rodrigo**, um observador neutro na sua escola. É sexta-feira à tarde e você está na biblioteca quando descobre que o **Mural Digital da Escola** foi bloqueado com mensagens ofensivas.\n\nNo ecrã aparecem vestígios de um **perfil falso: \"Bia_Truths\"**.\n\nVocê sabe que a Bia é uma colega inteligente e sensível que tem estado mais isolada ultimamente. Alguém tem vindo a assediá-la online.\n\n**Qual é o seu objetivo?**\n- Descobrir quem criou este perfil falso\n- Ajudar a Bia de alguma forma\n- Entender o que levou a isto\n\n**Começar a investigação...**",
+      "tags": "start, school, witness",
+      "stateInit": {
+        "investigationLevel": 0,
+        "evidenceFound": [],
+        "charactersMet": [],
+        "empathyScore": 0,
+        "cloutScore": 0
+      },
+      "links": [
+        {
+          "linkText": "Aproximar-se do Mural Digital",
+          "target": "mural_discovery",
+          "empathyScore": 30
+        }
+      ]
+    },
+    {
+      "pid": "2",
+      "name": "mural_discovery",
+      "text": "# A Descoberta do Mural\n\nVocê aproxima-se do Mural Digital da Escola. É um ecrã tátil interativo onde normalmente aparecem eventos da escola, avisos, e mensagens dos alunos.\n\nMas agora está **bloqueado**. Na tela, vê:\n\n```\n[SISTEMA SEGURO]\nMural Bloqueado por Administrador\nMotivo: Conteúdo Ofensivo Detectado\nData: Hoje, 14:32\n\nPerfil Falso Identificado:\n@Bia_Truths - \"Verdades Que Ninguém Diz\"\nSeguidores: 127\nPosts: 43 (TODOS REMOVIDOS)\n```\n\nAlguns posts ainda estão visíveis nas caches:\n- \"Bia é tão falsa quando seus amigos são burros\"\n- \"Ninguém quer uma seca como ela perto\"\n- \"Deveria guardar os seus assuntos para si\"\n\n**Você também vê dois prints de mensagens anexados:**\n1. Uma conversa de WhatsApp com uma **hora e localização no EXIF**\n2. Um **e-mail de recuperação** com caracteres estranhos\n\n**O que faz?**",
+      "tags": "school, evidence_discovery",
+      "links": [
+        {
+          "linkText": "Inspecionar o print de conversa (Puzzle 1: EXIF Metadata)",
+          "target": "puzzle_exif_metadata",
+          "empathyScore": 60,
+          "consequence": "investigation_advance"
+        },
+        {
+          "linkText": "Examinar o e-mail encriptado (Puzzle 2: Caesar Cipher)",
+          "target": "puzzle_caesar_cipher",
+          "empathyScore": 55,
+          "consequence": "investigation_advance"
+        },
+        {
+          "linkText": "Procurar um adulto (professor, diretor)",
+          "target": "report_authority",
+          "empathyScore": 70,
+          "consequence": "safe_path"
+        }
+      ]
+    },
+    {
+      "pid": "3",
+      "name": "puzzle_exif_metadata",
+      "text": "# Puzzle 1: O Detetive de Metadados\n\n## Tarefa\nVocê tem um print de uma conversa ofensiva. Ao inspecionar os **metadados EXIF**, você encontra informações importantes:\n\n- **Hora**: 10:45 (durante a aula de Educação Física)\n- **Localização**: Sala de Informática (coordenadas GPS)\n- **Dispositivo**: iPhone 13 Pro\n- **User Agent**: Safari on iOS 15\n\n## O Significado\nA mensagem foi enviada durante a aula de Educação Física, **a partir da Sala de Informática**. Mas quem estava lá durante essa aula?\n\nVocê sabe que:\n- Tiago (aluno da turma) pede sempre \"para ir à casa de banho\" durante a aula de ED\n- Lucas é o \"ajudante técnico\" da escola e tem acesso a todos os computadores\n- Catarina tem aulas de Matemática na sala ao lado da Informática\n\n## Pergunta para Você\n**Com base nos metadados, quem é o suspeito principal?**\n\nA) Tiago - porque ele sai da aula\nB) Lucas - porque tem acesso técnico\nC) Catarina - porque está perto\n\n**Digite sua resposta (A, B ou C):**",
+      "tags": "puzzle, investigation",
+      "puzzle": "exif_metadata_analysis",
+      "links": [
+        {
+          "linkText": "Responder com análise",
+          "target": "puzzle_exif_result",
+          "empathyScore": 75
+        }
+      ]
+    },
+    {
+      "pid": "4",
+      "name": "puzzle_caesar_cipher",
+      "text": "# Puzzle 2: Engenharia Reversa do Perfil\n\n## Tarefa\nVocê encontra o **e-mail de recuperação** associado ao perfil \"Bia_Truths\":\n\n```\nEmojhsdoh@hfkrrvwrfoxe.iurj\n```\n\nEste parece estar **encriptado com uma Cifra de César** (rotação simples de letras).\n\n## Como funciona a Cifra de César\nCada letra é deslocada por um número fixo. Exemplo:\n- Deslocamento de 3: A→D, B→E, C→F\n- Se você aplicar deslocamento -3: D→A, E→B, F→C\n\n## Dica Progressiva\nTente diferentes deslocamentos (1-25) até encontrar um resultado que faça sentido.\n\n**Qual é o e-mail original?**\n\n*Quando encontrar o e-mail, você verá menções a \"clube frequentado pelo agressor\"*",
+      "tags": "puzzle, investigation",
+      "puzzle": "caesar_cipher_decryption",
+      "links": [
+        {
+          "linkText": "Apresentar resultado (ex: example@domain.com)",
+          "target": "puzzle_caesar_result",
+          "empathyScore": 75
+        }
+      ]
+    },
+    {
+      "pid": "5",
+      "name": "puzzle_exif_result",
+      "text": "# Resultado da Análise EXIF\n\n**Você completou a análise!**\n\n## Descoberta\n\nA localização e hora indicam que a mensagem foi enviada durante a aula de Educação Física. O iPhone 13 Pro é um modelo caro que não todos têm.\n\nVocê investiga e descobre que **Tiago** é o único que:\n1. Sai da aula de ED com frequência\n2. Tem um iPhone 13 Pro (você já viu na escola)\n3. Tem acesso à Sala de Informática\n\n**Tiago é o suspeito principal.**\n\nMas Tiago não actua sozinho. Você também sabe que ele frequenta um clube de Gaming online onde usa o nome \"Tiago_Echo\".\n\n**+25 XP por investigação**\n**+30 Pontos de Empatia**\n\nAgora você tem duas opções:\n1. Confrontar Tiago directamente\n2. Tentar encontrar provas adicionais\n3. Reportar ao mentor NPC (IA do Mural)",
+      "tags": "puzzle_result",
+      "links": [
+        {
+          "linkText": "Confrontar Tiago directamente",
+          "target": "choice_confront_tiago",
+          "empathyScore": 80,
+          "consequence": "high_risk"
+        },
+        {
+          "linkText": "Reportar ao mentor NPC",
+          "target": "choice_mentor_protocol",
+          "empathyScore": 75,
+          "consequence": "safe_path"
+        }
+      ]
+    },
+    {
+      "pid": "6",
+      "name": "puzzle_caesar_result",
+      "text": "# Resultado da Cifra de César\n\n**Parabéns! Você desencriptou a mensagem!**\n\n## O E-mail Original\n\n```\nTiago_Echo@echo-gaming-club.com\n```\n\n(Deslocamento: 3 rotações para trás no alfabeto)\n\n## O Que Isto Significa\n\nO e-mail \"Tiago_Echo\" conecta-se directamente ao **Echo Gaming Club**, um servidor de Discord onde Tiago é ativo.\n\nVocê sabe que Tiago:\n- Frequenta o clube de Gaming\n- É conhecido por ser \"competitivo\" e gosta de atenção\n- Tem um grupo de amigos (Lucas, Catarina, João) que o seguem\n\n**Tiago é claramente o criador do perfil \"Bia_Truths\".**\n\n**+25 XP por desencriptação**\n**+30 Pontos de Empatia**\n\nAgora você tem provas. O que faz?",
+      "tags": "puzzle_result",
+      "links": [
+        {
+          "linkText": "Confrontar Tiago directamente",
+          "target": "choice_confront_tiago",
+          "empathyScore": 80,
+          "consequence": "high_risk"
+        },
+        {
+          "linkText": "Tentar converter Lucas (amigo de Tiago)",
+          "target": "choice_convert_lucas",
+          "empathyScore": 70,
+          "consequence": "medium_risk"
+        },
+        {
+          "linkText": "Reportar ao mentor NPC",
+          "target": "choice_mentor_protocol",
+          "empathyScore": 75,
+          "consequence": "safe_path"
+        }
+      ]
+    },
+    {
+      "pid": "7",
+      "name": "choice_confront_tiago",
+      "text": "# Decisão: Confrontação Directa\n\nVocê localiza Tiago no pátio da escola. Está com seu grupo - Lucas, Catarina e João.\n\n**Você approxima-se e diz:**\n\n\"Tiago, eu sei que foi você quem criou o perfil 'Bia_Truths'. Encontrei provas nos metadados e no e-mail do Echo Gaming Club.\"\n\n## Reação de Tiago\n\nTiago fica pálido. Seu grupo fica em silêncio.\n\n**Tiago**: \"Pah, foi só uma brincadeira! A Bia é chata e ninguém gosta dela mesmo. Porque é que te importas?\"\n\n**Lucas** (seu amigo): \"Cara, não era para levar a sério...\" *parace arrependido*\n\n**Catarina** (seguidora): \"Vão todos dar jeito. Deixem-no em paz!\"\n\n## Consequências\n\n- Você confrontou o bullying publicamente\n- Tiago recebeu uma intervenção social\n- Você também corre risco de ser alvo de retaliação\n\n**Próximos passos:**\n1. Lucas parece receptivo - você pode tentar convertê-lo\n2. Reportar formalmente aos adultos\n3. Verificar se Bia está bem",
+      "tags": "confrontation, choice_consequence",
+      "consequence": "high_risk_high_reward",
+      "links": [
+        {
+          "linkText": "Tentar converter Lucas (aproveitar o seu arrependimento)",
+          "target": "choice_convert_lucas",
+          "empathyScore": 85,
+          "consequence": "alliance"
+        },
+        {
+          "linkText": "Reportar aos adultos agora",
+          "target": "choice_mentor_protocol",
+          "empathyScore": 80
+        },
+        {
+          "linkText": "Procurar a Bia",
+          "target": "choice_help_bia",
+          "empathyScore": 90
+        }
+      ]
+    },
+    {
+      "pid": "8",
+      "name": "choice_convert_lucas",
+      "text": "# Decisão: Converter Lucas\n\nLucas é tecnicamente o \"ajudante técnico\" da escola e tinha conhecimento (mesmo que indireto) do que estava acontecendo.\n\nVocê o puxa para o lado e diz:\n\n\"Lucas, você viu o arrependimento na sua cara. Você não gosta disto, não é verdade?\"\n\n**Lucas**: \"Não... eu não queria isto. Tiago é meu amigo desde miúdo. Mas o que fizemos à Bia foi errado.\"\n\n**Você**: \"Então ajude-me. Você tem acesso técnico. Consegue provar que Tiago criou o perfil?\"\n\n## O Dilema de Lucas\n\nLucas fica em conflito. Sua lealdade a Tiago vs. o que é correto.\n\nDepois de uns segundos:\n\n**Lucas**: \"Está bem. Eu guardo registos de tudo. Vou reportar isto ao administrador junto com você.\"\n\n## Consequências\n\n- Você ganhou um **aliado de confiança**\n- Agora têm **provas técnicas irrefutáveis**\n- Tiago não pode negar\n\n**Próximo passo: Usar o Método TELL**",
+      "tags": "alliance_formed",
+      "consequence": "positive_alliance",
+      "links": [
+        {
+          "linkText": "Usar o Método TELL (G=Guardar, B=Bloquear, R=Reportar, F=Falar)",
+          "target": "choice_tell_protocol",
+          "empathyScore": 95,
+          "consequence": "success_path"
+        }
+      ]
+    },
+    {
+      "pid": "9",
+      "name": "choice_tell_protocol",
+      "text": "# Protocolo TELL: Ação Estruturada\n\nVocê e Lucas aplicam o **Protocolo TELL**:\n\n## 1. **Guardar Provas** ✓\n- Recolheram os prints das mensagens\n- Obtiveram registos técnicos de Lucas\n- Documentaram a hora e localização\n\n## 2. **Bloquear o Perfil** ✓\n- Lucas desativa o perfil \"Bia_Truths\"\n- Bloqueia a conta de Tiago de criar novos perfis\n- Configura filtros de monitorização\n\n## 3. **Reportar às Autoridades** ✓\n- Vocês apresentam as provas ao Director da Escola\n- Director contacta os pais de Tiago\n- Procedimento disciplinar iniciado\n\n## 4. **Falar com Adultos de Confiança** ✓\n- Director reúne-se com Bia e seus pais\n- Oferece-se apoio psicológico/counseling\n- Implementam-se medidas de proteção na escola\n\n## Resultado Final\n\n**DESFECHO: \"Guardião do Clima\"**\n\nVocê não foi herói sozinho. Você:\n1. Investigou com evidência lógica\n2. Converteu um aliado (Lucas)\n3. Usou protocolo estruturado\n4. Envolveu adultos responsáveis\n5. Protegeu a vítima\n\n**Pontuação Final:**\n- Pontos de Empatia: 95/100\n- Investigação: 100% completa\n- Alianças: 1 (Lucas)\n- Impacto: Alto\n\n**Feedback Pedagógico:**\n\"Você demonstrou liderança responsável. Não age sozinho nem por impulso, mas com método e apoio. Isto é como as coisas realmente funcionam no mundo real.\"\n\n**Recomendações para a vida real:**\n1. Sempre recolha provas antes de confrontar\n2. Procure aliados dentro do sistema\n3. Use protocolos estruturados (TELL)\n4. Nunca aja sozinho em casos graves\n5. Proteja a privacidade da vítima",
+      "tags": "ending, success, positive_action",
+      "links": []
+    },
+    {
+      "pid": "10",
+      "name": "choice_mentor_protocol",
+      "text": "# Decisão: Reportar ao Mentor NPC\n\nVocê decide não agir sozinho. Em vez disso, você procura o **Mentor NPC** - a Inteligência Artificial do Mural Digital.\n\nMuitos alunos não sabem que o sistema tem um **chatbot de suporte** integrado.\n\n**Você inicia uma conversa:**\n\n**Você**: \"Encontrei provas de que alguém criou um perfil falso para assediar a Bia.\"\n\n**Mentor IA**: \"Obrigado por reportar. Deixe-me analisar...\"\n\n*[A IA processa as provas]*\n\n**Mentor IA**: \"Confirmado. As provas apontam para Tiago como criador. Estou a contactar o Director agora. Você fez a coisa certa.\"\n\n## Consequências\n\n- Você reportou correctamente\n- Não correu risco pessoal\n- Mas também não investigou completamente\n- A resolução é mais rápida mas menos educativa para você\n\n**O Mentor IA implementa o Protocolo TELL automaticamente.**\n\n**DESFECHO: \"Guardião do Clima\" (Versão Assistida)**\n\nVocê ajudou, mas deixou a liderança para adultos/sistemas.\n\n**Pontuação Final:**\n- Pontos de Empatia: 80/100\n- Investigação: 70% (deixou pistas por explorar)\n- Alianças: 0\n- Impacto: Médio-Alto\n\n**Feedback Pedagógico:**\n\"Você fez a coisa certa em reportar. Mas deixou de ser investigador. Na vida real, às vezes você precisa de fazer mais.\"",
+      "tags": "ending, safe_path",
+      "links": []
+    },
+    {
+      "pid": "11",
+      "name": "choice_help_bia",
+      "text": "# Decisão: Procurar a Bia\n\nApós confrontar Tiago, você quer ter a certeza de que Bia está bem.\n\nVocê a encontra na biblioteca, sozinha, com um livro que não está a ler.\n\n**Você**: \"Oi Bia. Descobre sobre o perfil 'Bia_Truths'. Quero que saibas que não era verdade nenhuma disso. E consegui provar quem fez.\"\n\n**Bia** (com olhos cheios de lágrimas):\n\"Tu... tu descobriste quem foi? Pensei que todos concordavam com aquelas coisas sobre mim.\"\n\n**Você**: \"Não. Só um rapaz com problemas e alguns seguidores. Reportei aos adultos. Vai haver consequências para ele.\"\n\n## Momento de Conexão Humana\n\nBia começa a chorar, mas desta vez são lágrimas de alívio.\n\n**Bia**: \"Obrigada. Verdadeiramente. Não estava a lidar bem com isto.\"\n\nVocê percebe que Bia estava à beira de uma decisão muito perigosa.\n\n## Consequências Finais\n\n- Bia recebe apoio emocional\n- Você estabelece amizade significativa\n- Bia vai procurar ajuda profissional (com incentivo seu)\n- A escola implementa programas anti-bullying\n\n**DESFECHO FINAL: \"Guardião do Clima Completo\"**\n\nVocê não apenas resolveu o problema técnico, mas também cuidou da pessoa.\n\n**Pontuação Final:**\n- Pontos de Empatia: 100/100\n- Impacto Humano: Máximo\n- Relação com Bia: Amizade\n- Lições Aprendidas: Todas\n\n**Feedback Pedagógico:**\n\"Você é verdadeiramente um guardião. Não se trata apenas de encontrar culpados. É sobre proteger e apoiar as vítimas. Parabéns.\"",
+      "tags": "ending, best_ending",
+      "links": []
+    },
+    {
+      "pid": "12",
+      "name": "report_authority",
+      "text": "# Decisão: Procurar um Adulto\n\nVocê sente que isto é maior do que você pode lidar sozinho.\n\nVocê procura a **Professora Martins**, uma professora de confiança que trabalha em bem-estar estudantil.\n\n**Você**: \"Professora, encontrei provas de que alguém criou um perfil falso para assediar a Bia.\"\n\nVocê mostra o Mural Digital e explica o que viu.\n\n**Professora Martins**: \"Obrigada por vires contar-me. Isto é sério. Vou imediatamente ao Director.\"\n\nA Professora Martins toma a situação a sério e actua rapidamente.\n\n**DESFECHO: \"Guardião Responsável\"**\n\nVocê não foi herói espetacular, mas foi responsável e prudente.\n\n**Pontuação Final:**\n- Pontos de Empatia: 75/100\n- Bom Julgamento: Máximo\n- Eficiência: Alta\n- Risco Pessoal: Baixo\n\n**Feedback Pedagógico:**\n\"Você reconheceu que alguns problemas precisam de adultos. Isto é maturidade e bom senso. Nem todas as soluções vêm de heróis.\"",
+      "tags": "ending, responsible_path",
+      "links": []
+    }
+  ]
+}
