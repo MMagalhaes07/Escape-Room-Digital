@@ -2,22 +2,29 @@
  * GamePage Component
  * Página principal do jogo - renderiza os cenários
  */
-import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { useAuthStore, useGameStore, useUIStore } from '../store/index.js';
-import { API } from '../services/api.js';
-import './GamePage.css';
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { useAuthStore, useGameStore, useUIStore } from "../store/index.js";
+import { API } from "../services/api.js";
+import "./GamePage.css";
 
-import SceneRenderer from '../components/SceneRenderer.jsx';
-import ChoiceButtons from '../components/ChoiceButtons.jsx';
-import Inventory from '../components/Inventory.jsx';
-import PuzzleInterface from '../components/PuzzleInterface.jsx';
-import SessionMetrics from '../components/SessionMetrics.jsx';
+import SceneRenderer from "../components/SceneRenderer.jsx";
+import ChoiceButtons from "../components/ChoiceButtons.jsx";
+import Inventory from "../components/Inventory.jsx";
+import PuzzleInterface from "../components/PuzzleInterface.jsx";
+import SessionMetrics from "../components/SessionMetrics.jsx";
+import NarrativeStateDisplay from "../components/NarrativeStateDisplay.jsx";
 
 export default function GamePage() {
   const { scenario } = useParams();
   const navigate = useNavigate();
-  const { startSession, updateGameState, endSession, scenarioNarrative, gameState } = useGameStore();
+  const {
+    startSession,
+    updateGameState,
+    endSession,
+    scenarioNarrative,
+    gameState,
+  } = useGameStore();
   const { user } = useAuthStore();
   const { showNotification } = useUIStore();
   const [loading, setLoading] = useState(true);
@@ -44,14 +51,18 @@ export default function GamePage() {
       startSession(session, narrative);
       setLoading(false);
     } catch (error) {
-      showNotification('Erro ao iniciar jogo', 'error');
-      navigate('/dashboard');
+      showNotification("Erro ao iniciar jogo", "error");
+      navigate("/dashboard");
     }
   };
 
   const currentSceneId =
-    gameState?.current_scene || gameState?.currentScene || scenarioNarrative?.initialScene;
-  const currentScene = currentSceneId ? scenarioNarrative?.scenes?.[currentSceneId] : null;
+    gameState?.current_scene ||
+    gameState?.currentScene ||
+    scenarioNarrative?.initialScene;
+  const currentScene = currentSceneId
+    ? scenarioNarrative?.scenes?.[currentSceneId]
+    : null;
   const currentChoices = currentScene?.choices || [];
   const isTerminalScene = !!currentScene && currentChoices.length === 0;
   const currentPuzzleId = currentScene?.puzzle || null;
@@ -63,7 +74,11 @@ export default function GamePage() {
   // Limpar banner ao mudar de cena (evita "consequência" ficar presa)
   useEffect(() => {
     if (!currentSceneId) return;
-    if (lastConsequence && lastConsequenceSceneId && lastConsequenceSceneId !== currentSceneId) {
+    if (
+      lastConsequence &&
+      lastConsequenceSceneId &&
+      lastConsequenceSceneId !== currentSceneId
+    ) {
       setLastConsequence(null);
       setLastConsequenceSceneId(null);
     }
@@ -88,11 +103,11 @@ export default function GamePage() {
         gameState.sessionId,
         user.id,
         currentSceneId,
-        choice.text
+        choice.text,
       );
 
       if (!resp.data?.success) {
-        showNotification('Não foi possível registar a decisão', 'error');
+        showNotification("Não foi possível registar a decisão", "error");
         return;
       }
 
@@ -112,7 +127,7 @@ export default function GamePage() {
         },
       });
     } catch (e) {
-      showNotification('Erro ao processar decisão', 'error');
+      showNotification("Erro ao processar decisão", "error");
     } finally {
       setActing(false);
     }
@@ -120,7 +135,9 @@ export default function GamePage() {
 
   const handlePuzzleSolved = (points) => {
     updateGameState({
-      puzzles_solved: Array.from(new Set([...(gameState.puzzles_solved || []), currentPuzzleId])),
+      puzzles_solved: Array.from(
+        new Set([...(gameState.puzzles_solved || []), currentPuzzleId]),
+      ),
     });
   };
 
@@ -129,22 +146,30 @@ export default function GamePage() {
 
     setFinishing(true);
     try {
-      const resp = await API.game.finishSession(gameState.sessionId, user.id, currentSceneId);
+      const resp = await API.game.finishSession(
+        gameState.sessionId,
+        user.id,
+        currentSceneId,
+      );
       if (!resp.data?.success) {
-        showNotification('Erro ao finalizar sessão', 'error');
+        showNotification("Erro ao finalizar sessão", "error");
         return;
       }
       setSessionEnd(resp.data);
-      showNotification('Sessão finalizada com sucesso', 'success');
+      showNotification("Sessão finalizada com sucesso", "success");
     } catch (e) {
-      showNotification('Erro ao finalizar sessão', 'error');
+      showNotification("Erro ao finalizar sessão", "error");
     } finally {
       setFinishing(false);
     }
   };
 
   if (loading) {
-    return <div className="game-container"><div className="spinner"></div></div>;
+    return (
+      <div className="game-container">
+        <div className="spinner"></div>
+      </div>
+    );
   }
 
   if (sessionEnd?.sessionSummary) {
@@ -234,12 +259,15 @@ export default function GamePage() {
                 className="button button-secondary"
                 onClick={() => {
                   endSession();
-                  navigate('/dashboard');
+                  navigate("/dashboard");
                 }}
               >
                 Voltar ao Dashboard
               </button>
-              <button className="button button-primary" onClick={initializeGame}>
+              <button
+                className="button button-primary"
+                onClick={initializeGame}
+              >
                 Jogar novamente
               </button>
             </div>
@@ -250,13 +278,13 @@ export default function GamePage() {
   }
 
   const consequenceTone =
-    lastConsequence?.impact === 'positive'
-      ? 'positive'
-      : lastConsequence?.impact === 'negative'
-      ? 'negative'
-      : lastConsequence
-      ? 'neutral'
-      : null;
+    lastConsequence?.impact === "positive"
+      ? "positive"
+      : lastConsequence?.impact === "negative"
+        ? "negative"
+        : lastConsequence
+          ? "neutral"
+          : null;
 
   return (
     <div className="game-container">
@@ -264,7 +292,7 @@ export default function GamePage() {
         <div className="game-main">
           <div className="game-topbar">
             <div className="game-title">
-              <h1>{scenarioNarrative?.title || '🎮 Escape Room Digital'}</h1>
+              <h1>{scenarioNarrative?.title || "🎮 Escape Room Digital"}</h1>
               {scenarioNarrative?.description && (
                 <p className="game-subtitle">{scenarioNarrative.description}</p>
               )}
@@ -275,7 +303,7 @@ export default function GamePage() {
                 <div className="game-status" aria-live="polite">
                   <span className="game-status-dot" />
                   <span className="game-status-text">
-                    {finishing ? 'A finalizar…' : 'A guardar…'}
+                    {finishing ? "A finalizar…" : "A guardar…"}
                   </span>
                 </div>
               )}
@@ -283,7 +311,7 @@ export default function GamePage() {
                 className="button button-secondary"
                 onClick={() => {
                   endSession();
-                  navigate('/dashboard');
+                  navigate("/dashboard");
                 }}
               >
                 Sair
@@ -293,34 +321,52 @@ export default function GamePage() {
 
           <SessionMetrics />
 
+          <NarrativeStateDisplay
+            scenario={scenario}
+            currentState={currentScene}
+          />
+
           <SceneRenderer />
 
           {lastConsequence && (
-            <div className={`consequence-banner ${consequenceTone || ''}`}>
+            <div className={`consequence-banner ${consequenceTone || ""}`}>
               <div className="consequence-title">Conseqüência</div>
               <div className="consequence-text">{lastConsequence.text}</div>
               {lastConsequence.risk_level && (
-                <div className="consequence-meta">Risco: {lastConsequence.risk_level}</div>
+                <div className="consequence-meta">
+                  Risco: {lastConsequence.risk_level}
+                </div>
               )}
             </div>
           )}
 
-          <ChoiceButtons choices={currentChoices} disabled={acting} onSelect={handleChoiceSelected} />
+          <ChoiceButtons
+            choices={currentChoices}
+            disabled={acting}
+            onSelect={handleChoiceSelected}
+          />
 
           {currentPuzzleId && currentPuzzle && (
-            <PuzzleInterface puzzleId={currentPuzzleId} puzzleData={currentPuzzle} onSolved={handlePuzzleSolved} />
+            <PuzzleInterface
+              puzzleId={currentPuzzleId}
+              puzzleData={currentPuzzle}
+              onSolved={handlePuzzleSolved}
+            />
           )}
 
           {isTerminalScene && (
             <div className="game-finish">
               <h3>Fim desta narrativa</h3>
-              <p>Quando estiver pronto, finalize a sessão para ver o resumo e o feedback pedagógico.</p>
+              <p>
+                Quando estiver pronto, finalize a sessão para ver o resumo e o
+                feedback pedagógico.
+              </p>
               <button
                 className="button button-primary"
                 onClick={handleFinishSession}
                 disabled={finishing || acting}
               >
-                {finishing ? 'Finalizando...' : 'Finalizar sessão'}
+                {finishing ? "Finalizando..." : "Finalizar sessão"}
               </button>
             </div>
           )}

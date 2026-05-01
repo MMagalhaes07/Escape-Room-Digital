@@ -30,23 +30,34 @@
     {
       "pid": "2",
       "name": "mural_discovery",
-      "text": "# A Descoberta do Mural\n\nVocê aproxima-se do Mural Digital da Escola. É um ecrã tátil interativo onde normalmente aparecem eventos da escola, avisos, e mensagens dos alunos.\n\nMas agora está **bloqueado**. Na tela, vê:\n\n```\n[SISTEMA SEGURO]\nMural Bloqueado por Administrador\nMotivo: Conteúdo Ofensivo Detectado\nData: Hoje, 14:32\n\nPerfil Falso Identificado:\n@Bia_Truths - \"Verdades Que Ninguém Diz\"\nSeguidores: 127\nPosts: 43 (TODOS REMOVIDOS)\n```\n\nAlguns posts ainda estão visíveis nas caches:\n- \"Bia é tão falsa quando seus amigos são burros\"\n- \"Ninguém quer uma seca como ela perto\"\n- \"Deveria guardar os seus assuntos para si\"\n\n**Você também vê dois prints de mensagens anexados:**\n1. Uma conversa de WhatsApp com uma **hora e localização no EXIF**\n2. Um **e-mail de recuperação** com caracteres estranhos\n\n**O que faz?**",
+      "text": "# A Descoberta do Mural\n\n<!-- STATE_CHECKPOINT: investigation_begins, empathy: 30 -->\n\nVocê aproxima-se do ecrã tátil. Normalmente, é um espaço colorido — notícias de turma, avisos, mensagens leves. Mas agora:\n\n**Está bloqueado.**\n\nDe vermelho:
+```
+⚠️ [SISTEMA SEGURO]
+Mural Bloqueado por Administrador
+Motivo: Conteúdo Ofensivo Detectado
+Data: Hoje, 14:32
+```\n\nSeu coração dispara quando vê o nome do perfil:  
+**@Bia_Truths** — \"Verdades Que Ninguém Diz\"  
+127 seguidores. 43 posts (TODOS REMOVIDOS).\n\nMas os caches guardam cicatrizes:  
+- \"Bia é tão falsa quando seus amigos são burros\"  
+- \"Ninguém quer uma seca como ela perto\"  
+- \"Deveria guardar os seus assuntos para si\"\n\nVocê conhece a Bia. Ela sentou-se perto de você uma vez na biblioteca. Era tímida, inteligente, isolada.\n\n**Dois ficheiros aparecem anexados.**\n\n---\n\n## Como procede?\n\n(Note: Cada caminho revela provas diferentes e leva a desfechos distintos)",
       "tags": "school, evidence_discovery",
       "links": [
         {
-          "linkText": "Inspecionar o print de conversa (Puzzle 1: EXIF Metadata)",
+          "linkText": "**Mergulhar na análise técnica** — Estudar EXIF metadata e rastrear a origem. Isto te afasta de falar com alguém sobre o que viu, mas as provas falam mais alto que emoções.",
           "target": "puzzle_exif_metadata",
           "empathyScore": 60,
           "consequence": "investigation_advance"
         },
         {
-          "linkText": "Examinar o e-mail encriptado (Puzzle 2: Caesar Cipher)",
+          "linkText": "**Decifrar o e-mail escondido** — Procurar padrões e códigos. É intellectual e elegante, mas demora tempo enquanto Bia sofre em silêncio.",
           "target": "puzzle_caesar_cipher",
           "empathyScore": 55,
           "consequence": "investigation_advance"
         },
         {
-          "linkText": "Procurar um adulto (professor, diretor)",
+          "linkText": "**Procurar um adulto agora** — Contar à Professora Martins ou ao Director. É a ação mais responsável, mas pode parecer \"pouco corajosa\" aos teus olhos.",
           "target": "report_authority",
           "empathyScore": 70,
           "consequence": "safe_path"

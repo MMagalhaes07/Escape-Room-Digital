@@ -5,6 +5,7 @@
 import React, { useEffect } from "react";
 import { useGameStore } from "../store/index.js";
 import { parseMarkdown } from "../utils/markdownParser.js";
+import NarrativeStateDisplay from "./NarrativeStateDisplay.jsx";
 import "./GameComponents.css";
 
 export default function SceneRenderer() {

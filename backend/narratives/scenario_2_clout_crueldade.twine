@@ -37,28 +37,28 @@
       "timePressure": 10,
       "links": [
         {
-          "linkText": "\"LACRAR\" - Enviar comentário agressivo (ex: emoji de riso malvado)",
+          "linkText": "🔥 **\"LACRAR\" — Comentário agressivo**\n*Escolher isto: Ganhas clout IMEDIATO (65→85). Mas Bia vê tudo. Ela sabe que participaste. Este momento define tudo.*",
           "target": "choice_lacrar",
           "empathyScore": 10,
           "cloutScore": 40,
           "consequence": "aggressive_participation"
         },
         {
-          "linkText": "Enviar emoji neutro (😐) para não se envolver",
+          "linkText": "😐 **Emoji neutro**\n*Escolher isto: Ficas seguro no anonimato. Ninguém te culpa diretamente. Mas enquanto ficas quieto, o bullying escala. A cumplicidade silenciosa.*",
           "target": "choice_emoji_neutro",
           "empathyScore": 35,
           "cloutScore": 5,
           "consequence": "passive_participation"
         },
         {
-          "linkText": "Ignorar a mensagem completamente",
+          "linkText": "🚪 **Ignorar completamente — Sair do chat**\n*Escolher isto: Proteges-te. Mas Bia sofre sozinha. Mais tarde, vais descobrir que o silêncio também tem consequências.*",
           "target": "choice_ignore",
           "empathyScore": 50,
           "cloutScore": -10,
           "consequence": "neutrality"
         },
         {
-          "linkText": "Enviar mensagem privada a Bia",
+          "linkText": "❤️ **Mensagem privada à Bia — Suporte secreto**\n*Escolher isto: Arrisca-te. O grupo vai criticar-te. Mas Bia sabe que não está sozinha. O verdadeiro clout é estar com alguém quando custa.*",
           "target": "choice_private_message_bia",
           "empathyScore": 85,
           "cloutScore": -30,
