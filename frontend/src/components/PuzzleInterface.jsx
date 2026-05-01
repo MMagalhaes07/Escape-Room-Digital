@@ -3,13 +3,14 @@
  * Interface para resolver puzzles durante o jogo
  */
 import React, { useState } from 'react';
-import { useGameStore, useUIStore } from '../store/index.js';
+import { useAuthStore, useGameStore, useUIStore } from '../store/index.js';
 import { API } from '../services/api.js';
 import { FiCheckCircle, FiXCircle } from 'react-icons/fi';
 import './GameComponents.css';
 
 export default function PuzzleInterface({ puzzleId, puzzleData, onSolved }) {
   const { gameState } = useGameStore();
+  const { user } = useAuthStore();
   const { showNotification } = useUIStore();
   const [solving, setSolving] = useState(false);
   const [solved, setSolved] = useState(false);
@@ -23,13 +24,14 @@ export default function PuzzleInterface({ puzzleId, puzzleData, onSolved }) {
     try {
       const response = await API.game.completePuzzle(
         gameState.sessionId,
+        user?.id,
         puzzleId,
         answer
       );
 
       if (response.data.success) {
         setSolved(true);
-        showNotification('Puzzle resolvido! +25 pontos', 'success');
+        showNotification(`Puzzle resolvido! +${response.data.points || 50} pontos`, 'success');
         onSolved?.(response.data.points);
       } else {
         showNotification(
@@ -43,6 +45,8 @@ export default function PuzzleInterface({ puzzleId, puzzleData, onSolved }) {
       setSolving(false);
     }
   };
+
+  if (!puzzleData) return null;
 
   if (solved) {
     return (
@@ -58,53 +62,23 @@ export default function PuzzleInterface({ puzzleId, puzzleData, onSolved }) {
     <div className="puzzle-container">
       <div className="puzzle-header">
         <h3>{puzzleData.title}</h3>
-        <span className="puzzle-difficulty">{puzzleData.difficulty}</span>
+        {(puzzleData.difficulty || puzzleData.type) && (
+          <span className="puzzle-difficulty">{puzzleData.difficulty || puzzleData.type}</span>
+        )}
       </div>
 
       <div className="puzzle-content">
         <p className="puzzle-description">{puzzleData.description}</p>
 
-        {/* Renderizar tipo de puzzle diferente */}
-        {puzzleData.type === 'text_input' && (
-          <div className="puzzle-input">
-            <input
-              type="text"
-              value={answer}
-              onChange={(e) => setAnswer(e.target.value)}
-              placeholder={puzzleData.inputPlaceholder}
-              disabled={solving}
-            />
-          </div>
-        )}
-
-        {puzzleData.type === 'multiple_choice' && (
-          <div className="puzzle-choices">
-            {puzzleData.options.map((option, idx) => (
-              <button
-                key={idx}
-                className={`puzzle-choice ${answer === option ? 'selected' : ''}`}
-                onClick={() => setAnswer(option)}
-                disabled={solving}
-              >
-                {option}
-              </button>
-            ))}
-          </div>
-        )}
-
-        {puzzleData.type === 'ordering' && (
-          <div className="puzzle-ordering">
-            <p className="puzzle-instruction">{puzzleData.instruction}</p>
-            {/* Implementar drag-and-drop para ordenação */}
-            <div className="ordering-items">
-              {puzzleData.items.map((item, idx) => (
-                <div key={idx} className="ordering-item">
-                  {item}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+        <div className="puzzle-input">
+          <input
+            type="text"
+            value={answer}
+            onChange={(e) => setAnswer(e.target.value)}
+            placeholder="Escreve a tua resposta…"
+            disabled={solving}
+          />
+        </div>
 
         {/* Hints */}
         {puzzleData.hint && (
@@ -115,7 +89,7 @@ export default function PuzzleInterface({ puzzleId, puzzleData, onSolved }) {
 
         {/* Tentativas */}
         <div className="puzzle-attempts">
-          <span>Tentativas: {attempts}/{puzzleData.maxAttempts}</span>
+          <span>Tentativas: {attempts}</span>
         </div>
       </div>
 
@@ -123,7 +97,7 @@ export default function PuzzleInterface({ puzzleId, puzzleData, onSolved }) {
         <button
           className="button button-primary"
           onClick={handleSubmitAnswer}
-          disabled={solving || !answer}
+          disabled={solving || !answer || !gameState?.sessionId || !user?.id}
         >
           {solving ? 'Processando...' : 'Enviar Resposta'}
         </button>

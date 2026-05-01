@@ -33,14 +33,14 @@ export const API = {
   game: {
     startSession: (userId, scenario) =>
       client.post('/game/session', { userId, scenario }),
-    recordDecision: (sessionId, userId, sceneId, choiceId) =>
-      client.post('/game/decision', { sessionId, userId, sceneId, choiceId }),
+    recordDecision: (sessionId, userId, sceneId, choiceText) =>
+      client.post('/game/decision', { sessionId, userId, sceneId, choiceText }),
     completePuzzle: (sessionId, userId, puzzleId, solution) =>
       client.post('/game/puzzle', { sessionId, userId, puzzleId, solution }),
     discoverClue: (sessionId, userId, clueId) =>
       client.post('/game/clue', { sessionId, userId, clueId }),
-    finishSession: (sessionId, userId, finalChoice) =>
-      client.post('/game/finish', { sessionId, userId, finalChoice }),
+    finishSession: (sessionId, userId, finalSceneId) =>
+      client.post('/game/finish', { sessionId, userId, finalSceneId }),
   },
 
   // ===== MÉTRICAS =====
@@ -58,7 +58,7 @@ export const API = {
     getLeaderboard: (limit = 10) =>
       client.get('/gamification/leaderboard', { params: { limit } }),
     getGradeLeaderboard: (grade, limit = 10) =>
-      client.get(`/gamification/leaderboard/${grade}`, { params: { limit } }),
+      client.get(`/gamification/leaderboard/grade/${grade}`, { params: { limit } }),
     getAvailableBadges: () => client.get('/gamification/badges'),
   },
 

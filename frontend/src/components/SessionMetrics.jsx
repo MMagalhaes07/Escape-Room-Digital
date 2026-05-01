@@ -31,7 +31,7 @@ export default function SessionMetrics() {
   };
 
   // Calcular score de empatia (0-100)
-  const empathyScore = gameState?.empathyScore || 0;
+  const empathyScore = gameState?.scores?.empathy ?? gameState?.total_empathy ?? 0;
   const empathyLevel = empathyScore >= 75 ? 'Alto' : empathyScore >= 50 ? 'Médio' : 'Baixo';
   const empathyColor =
     empathyScore >= 75
@@ -86,7 +86,7 @@ export default function SessionMetrics() {
           </div>
           <div className="metric-content">
             <span className="metric-label">Decisões</span>
-            <div className="metric-value">{gameState?.decisions?.length || 0}</div>
+            <div className="metric-value">{gameState?.choices_made?.length || 0}</div>
           </div>
         </div>
       </div>

@@ -40,8 +40,21 @@ export const useGameStore = create((set) => ({
   startSession: (session, narrative) =>
     set({
       currentSession: session,
-      scenarioNarrative: narrative,
-      gameState: session.state || {},
+      scenarioNarrative: narrative || session?.narrative || null,
+      gameState: {
+        ...(session?.state || {}),
+        sessionId: session?.sessionId || session?.id,
+        startTime: Date.now(),
+        current_scene:
+          session?.state?.current_scene ||
+          (narrative || session?.narrative)?.initialScene ||
+          null,
+        inventory: session?.state?.inventory || session?.inventory || [],
+        choices_made: session?.state?.choices_made || [],
+        puzzles_solved: session?.state?.puzzles_solved || [],
+        discovered_clues: session?.state?.discovered_clues || [],
+        scores: session?.scores || session?.state?.scores || {},
+      },
     }),
 
   updateGameState: (newState) =>

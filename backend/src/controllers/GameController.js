@@ -109,6 +109,8 @@ export class GameController {
           scenario: session.scenario,
           state: gameState.variables,
           scores: gameState.scores,
+          inventory: gameState.inventory,
+          history: gameState.history,
           narrative: {
             title: narrative.title,
             description: narrative.description,
@@ -264,6 +266,8 @@ export class GameController {
         gameState: {
           variables: gameState.variables,
           scores: gameState.scores,
+          inventory: gameState.inventory,
+          history: gameState.history,
         },
       });
     } catch (error) {
@@ -348,6 +352,8 @@ export class GameController {
           gameState: {
             variables: gameState.variables,
             scores: gameState.scores,
+            inventory: gameState.inventory,
+            history: gameState.history,
           },
         });
       } else {
