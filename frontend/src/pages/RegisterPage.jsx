@@ -2,11 +2,11 @@
  * RegisterPage Component
  * Página de registro de novo utilizador
  */
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { useAuthStore, useUIStore } from '../store/index.js';
-import { API } from '../services/api.js';
-import './AuthPages.css';
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { useAuthStore, useUIStore } from "../store/index.js";
+import { API } from "../services/api.js";
+import "./AuthPages.css";
 
 export default function RegisterPage() {
   const navigate = useNavigate();
@@ -14,33 +14,56 @@ export default function RegisterPage() {
   const { setLoading, showNotification } = useUIStore();
 
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    passwordConfirm: '',
-    role: 'student',
-    grade: '8º',
-    school: '',
+    name: "",
+    email: "",
+    password: "",
+    passwordConfirm: "",
+    role: "student",
+    grade: "8º",
+    school: "",
   });
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  // Calculate password strength
+  const getPasswordStrength = () => {
+    const pass = formData.password;
+    if (!pass) return { level: "none", label: "", color: "transparent" };
+
+    let strength = 0;
+    if (pass.length >= 6) strength++;
+    if (pass.length >= 8) strength++;
+    if (/[A-Z]/.test(pass)) strength++;
+    if (/[0-9]/.test(pass)) strength++;
+    if (/[^A-Za-z0-9]/.test(pass)) strength++;
+
+    if (strength <= 2)
+      return { level: "weak", label: "Fraca", color: "var(--empathy-low)" };
+    if (strength <= 3)
+      return {
+        level: "medium",
+        label: "Média",
+        color: "var(--empathy-medium)",
+      };
+    return { level: "strong", label: "Forte", color: "var(--empathy-high)" };
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
 
     // Validação
     if (formData.password !== formData.passwordConfirm) {
-      setError('As passwords não coincidem');
+      setError("As passwords não coincidem");
       return;
     }
 
     if (formData.password.length < 6) {
-      setError('Password deve ter pelo menos 6 caracteres');
+      setError("Password deve ter pelo menos 6 caracteres");
       return;
     }
 
@@ -53,14 +76,14 @@ export default function RegisterPage() {
 
       setToken(token);
       setUser(user);
-      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem("user", JSON.stringify(user));
 
-      showNotification(`Bem-vindo, ${user.name}!`, 'success');
-      navigate('/dashboard');
+      showNotification(`Bem-vindo, ${user.name}!`, "success");
+      navigate("/dashboard");
     } catch (err) {
-      const message = err.response?.data?.error || 'Erro ao registar';
+      const message = err.response?.data?.error || "Erro ao registar";
       setError(message);
-      showNotification(message, 'error');
+      showNotification(message, "error");
     } finally {
       setLoading(false);
     }
@@ -114,6 +137,25 @@ export default function RegisterPage() {
               placeholder="••••••••"
               required
             />
+            {formData.password && (
+              <div className="password-strength-container">
+                <div className="password-strength-bar">
+                  <div
+                    className={`strength-fill strength-${getPasswordStrength().level}`}
+                    style={{
+                      width: `${getPasswordStrength().level === "none" ? 0 : getPasswordStrength().level === "weak" ? 33 : getPasswordStrength().level === "medium" ? 66 : 100}%`,
+                      backgroundColor: getPasswordStrength().color,
+                    }}
+                  ></div>
+                </div>
+                <span
+                  className="password-strength-text"
+                  style={{ color: getPasswordStrength().color }}
+                >
+                  Força: {getPasswordStrength().label}
+                </span>
+              </div>
+            )}
           </div>
 
           <div className="form-group">
@@ -142,7 +184,7 @@ export default function RegisterPage() {
             </select>
           </div>
 
-          {formData.role === 'student' && (
+          {formData.role === "student" && (
             <div className="form-group">
               <label className="form-label">Turma</label>
               <select
@@ -171,7 +213,11 @@ export default function RegisterPage() {
             />
           </div>
 
-          <button type="submit" className="button button-primary" style={{ width: '100%' }}>
+          <button
+            type="submit"
+            className="button button-primary"
+            style={{ width: "100%" }}
+          >
             Registar
           </button>
         </form>

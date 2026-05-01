@@ -1,14 +1,14 @@
 /**
  * MODEL: GameSession
- * 
+ *
  * Estrutura para sesões de jogo individual do utilizador
  * Armazena o estado do jogo para cada jogador
- * 
+ *
  * CAMADA 3: DADOS
  * CAMADA 2: STATE MANAGER - Gerencia estado do jogo no contexto de persistência
  */
-import { query } from '../db/pool.js';
-import { v4 as uuidv4 } from 'uuid';
+import { query } from "../db/pool.js";
+import { v4 as uuidv4 } from "uuid";
 
 export class GameSessionModel {
   /**
@@ -19,24 +19,28 @@ export class GameSessionModel {
   static async create(userId, scenario) {
     const sessionId = uuidv4();
     const startTime = new Date();
-    
+
     const text = `
       INSERT INTO game_sessions (id, user_id, scenario, start_time, state)
       VALUES ($1, $2, $3, $4, $5)
       RETURNING *
     `;
-    
+
     // Estado inicial do jogo
+    // Nota: currentScene será definido corretamente pelo narrative.initialScene
+    // no startSession response
     const initialState = {
-      currentScene: scenario === 'scenario_1' ? 'school_intro' : 'chat_intro',
+      currentScene: "inicio",
+      current_scene: "inicio",
       inventory: [],
       choices_made: [],
       puzzles_solved: [],
       discovered_clues: [],
       completion_time: 0,
       game_active: true,
+      total_empathy: 0,
     };
-    
+
     try {
       const result = await query(text, [
         sessionId,
@@ -55,7 +59,7 @@ export class GameSessionModel {
    * Buscar sessão por ID
    */
   static async findById(sessionId) {
-    const text = 'SELECT * FROM game_sessions WHERE id = $1';
+    const text = "SELECT * FROM game_sessions WHERE id = $1";
     try {
       const result = await query(text, [sessionId]);
       return result.rows[0];
@@ -88,23 +92,23 @@ export class GameSessionModel {
    */
   static async updateState(sessionId, stateUpdate) {
     // Primeiro obtemos o estado atual
-    const getStateText = 'SELECT state FROM game_sessions WHERE id = $1';
+    const getStateText = "SELECT state FROM game_sessions WHERE id = $1";
     const currentResult = await query(getStateText, [sessionId]);
-    
+
     if (currentResult.rows.length === 0) {
-      throw new Error('Session not found');
+      throw new Error("Session not found");
     }
-    
+
     const currentState = currentResult.rows[0].state;
     const updatedState = { ...currentState, ...stateUpdate };
-    
+
     const updateText = `
       UPDATE game_sessions
       SET state = $1, last_updated = $2
       WHERE id = $3
       RETURNING *
     `;
-    
+
     try {
       const result = await query(updateText, [
         JSON.stringify(updatedState),
@@ -122,14 +126,14 @@ export class GameSessionModel {
    */
   static async finalize(sessionId, finalState) {
     const endTime = new Date();
-    
+
     const text = `
       UPDATE game_sessions
       SET end_time = $1, state = $2
       WHERE id = $3
       RETURNING *
     `;
-    
+
     try {
       const result = await query(text, [
         endTime,
@@ -158,7 +162,7 @@ export class GameSessionModel {
       FROM game_sessions
       WHERE id = $1
     `;
-    
+
     try {
       const result = await query(text, [sessionId]);
       return result.rows[0];

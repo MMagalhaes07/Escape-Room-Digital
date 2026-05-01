@@ -2,12 +2,12 @@
  * Navbar Component
  * Barra de navegação com menu e informações do utilizador
  */
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuthStore } from '../store/index.js';
-import { FiLogOut, FiUser, FiHome } from 'react-icons/fi';
-import { PiGameController } from 'react-icons/pi';
-import './Navbar.css';
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuthStore } from "../store/index.js";
+import { FiLogOut, FiUser, FiHome } from "react-icons/fi";
+import { PiGameController } from "react-icons/pi";
+import "./Navbar.css";
 
 export default function Navbar() {
   const { user, logout } = useAuthStore();
@@ -15,10 +15,10 @@ export default function Navbar() {
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
+    navigate("/login");
   };
 
-  const isTeacher = user?.role === 'teacher';
+  const isTeacher = user?.role === "teacher";
 
   return (
     <nav className="navbar">
@@ -63,12 +63,22 @@ export default function Navbar() {
             </li>
           )}
 
+          {/* Perfil Link */}
+          <li>
+            <Link to="/profile" className="nav-link">
+              <FiUser size={20} />
+              Perfil
+            </Link>
+          </li>
+
           {/* Perfil do Utilizador */}
           <li className="navbar-user">
-            <span className="user-badge">{user?.name?.charAt(0).toUpperCase()}</span>
+            <span className="user-badge">
+              {user?.name?.charAt(0).toUpperCase()}
+            </span>
             <div className="user-info">
               <p className="user-name">{user?.name}</p>
-              <p className="user-role">{isTeacher ? 'Professor' : 'Aluno'}</p>
+              <p className="user-role">{isTeacher ? "Professor" : "Aluno"}</p>
             </div>
           </li>
 
