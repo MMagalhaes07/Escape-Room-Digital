@@ -84,7 +84,8 @@ export class PuzzleController {
       }
 
       // 1. Recuperar sessão do jogador
-      const session = await GameSessionModel.getById(sessionId);
+      // FIX #2 — GameSessionModel só tem findById(), não getById()
+      const session = await GameSessionModel.findById(sessionId);
       if (!session) {
         return res.status(404).json({ error: "Session not found" });
       }
@@ -299,8 +300,11 @@ export class PuzzleController {
       }
 
       // Recuperar contexto do jogador
-      const session = await GameSessionModel.getById(sessionId);
-      const sessionState = JSON.parse(session.state || "{}");
+      // FIX #2 — GameSessionModel só tem findById(), não getById()
+      const session = await GameSessionModel.findById(sessionId);
+      const sessionState = typeof session.state === 'string'
+        ? JSON.parse(session.state || '{}')
+        : session.state || {}; // FIX #4 — JSONB já é objeto
 
       // Recuperar histórico de respostas
       const answers = await PuzzleAnswerModel.getBySessionAndPuzzle(

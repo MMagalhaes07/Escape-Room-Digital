@@ -34,8 +34,8 @@ describe("PuzzleValidator", () => {
       difficulty: 1,
       educationalContext: "bullying_investigation",
       hints: [
-        { attemptThreshold: 1, text: "Pista 1" },
-        { attemptThreshold: 2, text: "Pista 2" },
+        { id: "hint_1", attemptThreshold: 1, text: "Pista 1" },
+        { id: "hint_2", attemptThreshold: 2, text: "Pista 2" },
       ],
     };
 

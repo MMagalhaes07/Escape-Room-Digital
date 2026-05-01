@@ -1,91 +1,59 @@
-/**
- * Notification Styles
- */
+.notification-container {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  pointer-events: none;
+}
 
 .notification {
-  position: fixed;
-  bottom: var(--spacing-lg);
-  right: var(--spacing-lg);
+  pointer-events: all;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--spacing-lg);
-  padding: var(--spacing-lg);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-lg);
-  min-width: 300px;
-  max-width: 500px;
-  z-index: 1000;
-  animation: slideInUp var(--transition-base);
+  gap: 0.75rem;
+  padding: 0.85rem 1.25rem;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  max-width: 360px;
+  animation: notifIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
 }
 
-.notification-content {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-md);
-  flex: 1;
-}
-
-.notification-message {
-  margin: 0;
-  font-weight: 500;
-}
-
-.notification-close {
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: inherit;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  transition: all var(--transition-base);
-}
-
-.notification-close:hover {
-  opacity: 0.7;
-}
-
-/* Variações por Tipo */
-.notification-success {
-  background-color: var(--empathy-high);
-  color: white;
-}
-
-.notification-error {
-  background-color: var(--empathy-low);
-  color: white;
-}
-
-.notification-info {
-  background-color: var(--primary);
-  color: white;
-}
-
-/* Animação */
-@keyframes slideInUp {
+@keyframes notifIn {
   from {
     opacity: 0;
-    transform: translateY(1rem);
+    transform: translateX(2rem) scale(0.9);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateX(0) scale(1);
   }
 }
 
-/* Responsive */
-@media (max-width: 640px) {
-  .notification {
-    min-width: auto;
-    max-width: calc(100% - var(--spacing-lg) * 2);
-    right: var(--spacing-md);
-    left: var(--spacing-md);
-    bottom: var(--spacing-md);
-  }
+.notification.success {
+  background: #0d2920;
+  border: 1px solid rgba(0, 212, 170, 0.4);
+  color: #00d4aa;
+}
 
-  .notification-message {
-    font-size: 0.95rem;
-  }
+.notification.error {
+  background: #1f0d0d;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: #f87171;
+}
+
+.notification.info {
+  background: #0f1630;
+  border: 1px solid rgba(99, 102, 241, 0.4);
+  color: #818cf8;
+}
+
+.notification.warning {
+  background: #1a1205;
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  color: #fbb040;
 }

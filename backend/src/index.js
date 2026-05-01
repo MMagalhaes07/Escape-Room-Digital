@@ -10,6 +10,9 @@ import userRoutes from './routes/userRoutes.js';
 import metricsRoutes from './routes/metricsRoutes.js';
 import gamificationRoutes from './routes/gamificationRoutes.js';
 import teacherRoutes from './routes/teacherRoutes.js';
+// FIX #1 — Rotas de puzzles e pistas estavam em falta
+import puzzleRoutes from './routes/puzzleRoutes.js';
+import hintRoutes from './routes/hintRoutes.js';
 import { GameController } from './controllers/GameController.js';
 
 dotenv.config();
@@ -53,6 +56,9 @@ app.use('/api/users', userRoutes);
 app.use('/api/metrics', metricsRoutes);
 app.use('/api/gamification', gamificationRoutes);
 app.use('/api/teachers', teacherRoutes);
+// FIX #1 — Montar rotas de puzzles e pistas
+app.use('/api/puzzles', puzzleRoutes);
+app.use('/api/hints', hintRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

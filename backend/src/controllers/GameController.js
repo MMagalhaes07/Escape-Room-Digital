@@ -24,6 +24,20 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 /**
+ * FIX #4 — Safe parse de estado JSONB.
+ * O driver `pg` já converte colunas JSONB em objetos JS automaticamente,
+ * mas em alguns cenários de fallback pode chegar como string.
+ * Esta função trata ambos os casos sem lançar SyntaxError.
+ */
+function safeParseState(raw) {
+  if (!raw) return {};
+  if (typeof raw === 'string') {
+    try { return JSON.parse(raw); } catch { return {}; }
+  }
+  return raw; // já é objeto (comportamento padrão do pg com JSONB)
+}
+
+/**
  * Narrative Manager - Carrega narrativas de ficheiros Twine
  * Suporta hot-reloading em desenvolvimento
  */
@@ -307,7 +321,7 @@ export class GameController {
           sessionId,
           userId,
           sceneId,
-          choiceText,
+          choiceId: choiceText, // FIX #3 — o modelo espera choiceId, não choiceText
           consequence,
         });
       } catch (dbError) {
@@ -320,10 +334,7 @@ export class GameController {
 
       // Atualizar estado da sessão no banco
       try {
-        const currentState =
-          typeof session.state === "string"
-            ? JSON.parse(session.state)
-            : session.state || {};
+        const currentState = safeParseState(session.state); // FIX #4
         currentState.choices_made = (currentState.choices_made || []).concat({
           sceneId,
           choiceText,
@@ -423,7 +434,7 @@ export class GameController {
         gameState.completePuzzle(puzzleId);
 
         // Atualizar estado da sessão no banco
-        const currentState = JSON.parse(session.state);
+        const currentState = safeParseState(session.state); // FIX #4
         if (!currentState.puzzles_solved) {
           currentState.puzzles_solved = [];
         }
@@ -491,7 +502,7 @@ export class GameController {
         return res.status(404).json({ error: "Session not found" });
       }
 
-      const currentState = JSON.parse(session.state);
+      const currentState = safeParseState(session.state); // FIX #4
 
       if (!currentState.discovered_clues.includes(clueId)) {
         currentState.discovered_clues.push(clueId);
@@ -533,7 +544,7 @@ export class GameController {
         gameStates.set(sessionId, gameState);
       }
 
-      const currentState = JSON.parse(session.state);
+      const currentState = safeParseState(session.state); // FIX #4
       const endTime = new Date();
       const duration = Math.floor(
         (endTime - new Date(session.start_time)) / 1000,

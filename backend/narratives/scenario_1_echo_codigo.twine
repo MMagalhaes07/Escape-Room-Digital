@@ -30,18 +30,7 @@
     {
       "pid": "2",
       "name": "mural_discovery",
-      "text": "# A Descoberta do Mural\n\n<!-- STATE_CHECKPOINT: investigation_begins, empathy: 30 -->\n\nVocê aproxima-se do ecrã tátil. Normalmente, é um espaço colorido — notícias de turma, avisos, mensagens leves. Mas agora:\n\n**Está bloqueado.**\n\nDe vermelho:
-```
-⚠️ [SISTEMA SEGURO]
-Mural Bloqueado por Administrador
-Motivo: Conteúdo Ofensivo Detectado
-Data: Hoje, 14:32
-```\n\nSeu coração dispara quando vê o nome do perfil:  
-**@Bia_Truths** — \"Verdades Que Ninguém Diz\"  
-127 seguidores. 43 posts (TODOS REMOVIDOS).\n\nMas os caches guardam cicatrizes:  
-- \"Bia é tão falsa quando seus amigos são burros\"  
-- \"Ninguém quer uma seca como ela perto\"  
-- \"Deveria guardar os seus assuntos para si\"\n\nVocê conhece a Bia. Ela sentou-se perto de você uma vez na biblioteca. Era tímida, inteligente, isolada.\n\n**Dois ficheiros aparecem anexados.**\n\n---\n\n## Como procede?\n\n(Note: Cada caminho revela provas diferentes e leva a desfechos distintos)",
+      "text": "# A Descoberta do Mural\n\n<!-- STATE_CHECKPOINT: investigation_begins, empathy: 30 -->\n\nVocê aproxima-se do ecrã tátil. Normalmente, é um espaço colorido — notícias de turma, avisos, mensagens leves. Mas agora:\n\n**Está bloqueado.**\n\nDe vermelho:\n```\n⚠️ [SISTEMA SEGURO]\nMural Bloqueado por Administrador\nMotivo: Conteúdo Ofensivo Detectado\nData: Hoje, 14:32\n```\n\nSeu coração dispara quando vê o nome do perfil:  \n**@Bia_Truths** — \"Verdades Que Ninguém Diz\"  \n127 seguidores. 43 posts (TODOS REMOVIDOS).\n\nMas os caches guardam cicatrizes:  \n- \"Bia é tão falsa quando seus amigos são burros\"  \n- \"Ninguém quer uma seca como ela perto\"  \n- \"Deveria guardar os seus assuntos para si\"\n\nVocê conhece a Bia. Ela sentou-se perto de você uma vez na biblioteca. Era tímida, inteligente, isolada.\n\n**Dois ficheiros aparecem anexados.**\n\n---\n\n## Como procede?\n\n(Note: Cada caminho revela provas diferentes e leva a desfechos distintos)",
       "tags": "school, evidence_discovery",
       "links": [
         {

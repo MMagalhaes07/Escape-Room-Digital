@@ -27,7 +27,7 @@ export class HintController {
       }
 
       // Recuperar sessão para obter user_id
-      const session = await GameSessionModel.getById(sessionId);
+      const session = await GameSessionModel.findById(sessionId);
       if (!session) {
         return res.status(404).json({ error: "Session not found" });
       }
@@ -102,7 +102,7 @@ export class HintController {
       }
 
       // Recuperar sessão
-      const session = await GameSessionModel.getById(sessionId);
+      const session = await GameSessionModel.findById(sessionId);
       if (!session) {
         return res.status(404).json({ error: "Session not found" });
       }
@@ -131,7 +131,7 @@ export class HintController {
           .json({ error: "sessionId query parameter required" });
       }
 
-      const session = await GameSessionModel.getById(sessionId);
+      const session = await GameSessionModel.findById(sessionId);
       if (!session) {
         return res.status(404).json({ error: "Session not found" });
       }
@@ -166,7 +166,7 @@ export class HintController {
           .json({ error: "puzzleId and sessionId query parameters required" });
       }
 
-      const session = await GameSessionModel.getById(sessionId);
+      const session = await GameSessionModel.findById(sessionId);
       if (!session) {
         return res.status(404).json({ error: "Session not found" });
       }
@@ -214,7 +214,7 @@ export class HintController {
           .json({ error: "sessionId query parameter required" });
       }
 
-      const session = await GameSessionModel.getById(sessionId);
+      const session = await GameSessionModel.findById(sessionId);
       if (!session) {
         return res.status(404).json({ error: "Session not found" });
       }
@@ -245,7 +245,7 @@ export class HintController {
           .json({ error: "sessionId and puzzleId query parameters required" });
       }
 
-      const session = await GameSessionModel.getById(sessionId);
+      const session = await GameSessionModel.findById(sessionId);
       if (!session) {
         return res.status(404).json({ error: "Session not found" });
       }
@@ -294,7 +294,7 @@ export class HintController {
           .json({ error: "sessionId query parameter required" });
       }
 
-      const session = await GameSessionModel.getById(sessionId);
+      const session = await GameSessionModel.findById(sessionId);
       if (!session) {
         return res.status(404).json({ error: "Session not found" });
       }
