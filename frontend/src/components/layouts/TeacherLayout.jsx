@@ -20,9 +20,9 @@ export const TeacherLayout = () => {
   };
 
   const navItems = [
-    { path: "/teacher/dashboard", label: "Leaderboard", icon: "📊" },
-    { path: "/teacher/students", label: "Students", icon: "👥" },
-    { path: "/teacher/profile", label: "Profile", icon: "⚙️" },
+    { path: "/teacher/dashboard", label: "Classificações", icon: "📊" },
+    { path: "/teacher/students", label: "Alunos", icon: "👥" },
+    { path: "/teacher/profile", label: "Perfil", icon: "⚙️" },
   ];
 
   return (
@@ -67,13 +67,13 @@ export const TeacherLayout = () => {
           >
             {isDark ? (
               <>
-                <Sun className="w-5 h-5" />
-                {sidebarOpen && <span className="text-sm">Light Mode</span>}
+                <Moon className="w-5 h-5" />
+                {sidebarOpen && <span className="text-sm">Modo Escuro</span>}
               </>
             ) : (
               <>
-                <Moon className="w-5 h-5" />
-                {sidebarOpen && <span className="text-sm">Dark Mode</span>}
+                <Sun className="w-5 h-5" />
+                {sidebarOpen && <span className="text-sm">Modo Claro</span>}
               </>
             )}
           </button>
@@ -87,12 +87,13 @@ export const TeacherLayout = () => {
         </div>
 
         {/* Toggle button */}
-        <div className="p-2">
+        <div className="p-4">
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="w-full p-2 hover:bg-[var(--bg-tertiary)] rounded-lg"
+            className="w-full flex items-center gap-3 px-4 py-2 hover:bg-[var(--bg-tertiary)] rounded-lg"
           >
             <Menu className="w-5 h-5" />
+            {sidebarOpen && <span className="text-sm">Menu</span>}
           </button>
         </div>
       </aside>
@@ -100,9 +101,11 @@ export const TeacherLayout = () => {
       {/* Main Content */}
       <main className="flex-1 overflow-auto">
         {/* Top Bar */}
-        <div className="bg-[var(--bg-secondary)] border-b border-[var(--bg-tertiary)] px-6 py-4 sticky top-0 z-10">
+        <div
+          className={`bg-[var(--bg-secondary)] border-b border-[var(--bg-tertiary)] px-6 sticky top-0 z-10 ${sidebarOpen ? "py-2.5" : "py-2"}`}
+        >
           <div className="flex justify-between items-center">
-            <h1 className="text-2xl font-bold">Teacher Dashboard</h1>
+            <h1 className="text-2xl font-bold">Dashboard</h1>
             <div className="flex items-center gap-4">
               <span className="text-sm text-[var(--text-secondary)]">
                 {user?.name}

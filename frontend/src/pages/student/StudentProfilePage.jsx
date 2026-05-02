@@ -59,7 +59,7 @@ export default function StudentProfilePage() {
 
   return (
     <div className="max-w-2xl">
-      <h1 className="text-3xl font-bold mb-8">Your Profile</h1>
+      <h1 className="text-3xl font-bold mb-8">O meu perfil</h1>
 
       {successMessage && (
         <Alert type="success" onClose={() => setSuccessMessage("")}>
@@ -82,16 +82,16 @@ export default function StudentProfilePage() {
           <>
             <Card className="flex flex-col justify-center text-center">
               <div className="text-3xl font-bold text-[var(--accent-blue)]">
-                {stats.totalPoints}
+                {stats.profile.points}
               </div>
-              <p className="text-[var(--text-secondary)]">Total Points</p>
+              <p className="text-[var(--text-secondary)]">Pontos</p>
             </Card>
 
             <Card className="flex flex-col justify-center text-center">
               <div className="text-3xl font-bold text-green-500">
-                {stats.badgesEarned}
+                {stats.badges.length}
               </div>
-              <p className="text-[var(--text-secondary)]">Badges Earned</p>
+              <p className="text-[var(--text-secondary)]">Crachás</p>
             </Card>
           </>
         )}
@@ -99,11 +99,11 @@ export default function StudentProfilePage() {
 
       {/* Edit Profile Form */}
       <Card>
-        <h3 className="text-xl font-bold mb-6">Edit Profile</h3>
+        <h3 className="text-xl font-bold mb-6">Editar Perfil</h3>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input
-            label="Full Name"
+            label="Nome Completo"
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           />
@@ -119,40 +119,14 @@ export default function StudentProfilePage() {
 
           <div className="pt-4 flex gap-2">
             <Button type="submit" variant="primary" disabled={saving}>
-              {saving ? "Saving..." : "Save Changes"}
+              {saving ? "Gravando..." : "Gravar Alterações"}
             </Button>
             <Button type="button" variant="secondary">
-              Cancel
+              Cancelar
             </Button>
           </div>
         </form>
       </Card>
-
-      {/* Stats Summary */}
-      {stats && (
-        <Card className="mt-8">
-          <h3 className="text-xl font-bold mb-6">Statistics</h3>
-
-          <div className="space-y-4">
-            <div className="flex justify-between items-center py-2 border-b border-[var(--bg-tertiary)]">
-              <span>Scenarios Completed</span>
-              <span className="font-bold">{stats.scenariosCompleted}</span>
-            </div>
-            <div className="flex justify-between items-center py-2 border-b border-[var(--bg-tertiary)]">
-              <span>Decisions Made</span>
-              <span className="font-bold">{stats.decisionsCount}</span>
-            </div>
-            <div className="flex justify-between items-center py-2 border-b border-[var(--bg-tertiary)]">
-              <span>Puzzles Solved</span>
-              <span className="font-bold">{stats.puzzlesSolved}</span>
-            </div>
-            <div className="flex justify-between items-center py-2">
-              <span>Average Score</span>
-              <span className="font-bold">{stats.averageScore}%</span>
-            </div>
-          </div>
-        </Card>
-      )}
     </div>
   );
 }

@@ -18,9 +18,9 @@ export const StudentLayout = () => {
   };
 
   const navItems = [
-    { path: "/student/scenarios", label: "Scenarios", icon: Home },
-    { path: "/student/badges", label: "Badges", icon: Trophy },
-    { path: "/student/profile", label: "Profile", icon: User },
+    { path: "/student/scenarios", label: "Cenários", icon: Home },
+    { path: "/student/badges", label: "Crachás", icon: Trophy },
+    { path: "/student/profile", label: "Perfil", icon: User },
   ];
 
   return (
@@ -71,7 +71,7 @@ export const StudentLayout = () => {
               <div className="text-sm">
                 <div className="font-medium">{user?.name}</div>
                 <div className="text-xs text-[var(--text-secondary)]">
-                  Student
+                  Aluno
                 </div>
               </div>
             </div>

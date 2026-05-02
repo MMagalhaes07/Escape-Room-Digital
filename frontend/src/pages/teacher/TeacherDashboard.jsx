@@ -9,12 +9,14 @@ import {
   Button,
   EmptyState,
 } from "@/components/ui";
+import { useAuthStore } from "@/store/authStore";
 import { useTeacher, useGamification } from "@/hooks/useAPI";
 import { Download, RefreshCw } from "lucide-react";
 
 export default function TeacherDashboard() {
   const { state: teacherState, getDashboard, exportClassReport } = useTeacher();
   const { state: gamificationState, getLeaderboard } = useGamification();
+  const user = useAuthStore((state) => state.user);
 
   const [dashboardData, setDashboardData] = useState(null);
   const [leaderboard, setLeaderboard] = useState([]);
@@ -24,7 +26,8 @@ export default function TeacherDashboard() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const dashboard = await getDashboard();
+        console.log("Fetching dashboard for teacher:", user);
+        const dashboard = await getDashboard(user.id, user.school);
         setDashboardData(dashboard);
 
         const leaders = await getLeaderboard();
@@ -63,9 +66,9 @@ export default function TeacherDashboard() {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold mb-2">Class Dashboard</h1>
+          <h1 className="text-3xl font-bold mb-2">Dashboard da Turma</h1>
           <p className="text-[var(--text-secondary)]">
-            {dashboardData?.className} • {dashboardData?.studentCount} Students
+            {user.school} • {dashboardData?.dashboard.totalStudents} Alunos
           </p>
         </div>
 
@@ -89,35 +92,35 @@ export default function TeacherDashboard() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <StatsCard
           icon="👥"
-          label="Total Students"
-          value={dashboardData?.studentCount || 0}
+          label="Total de Alunos"
+          value={dashboardData?.dashboard.totalStudents || 0}
         />
         <StatsCard
           icon="🎮"
-          label="Scenarios Started"
-          value={dashboardData?.scenariosStarted || 0}
+          label="Cenarios Iniciados"
+          value={dashboardData?.dashboard.analytics[0].total_sessions || 0}
         />
         <StatsCard
           icon="✅"
-          label="Completed"
-          value={dashboardData?.scenariosCompleted || 0}
+          label="Percentagem de Conclusão"
+          value={`${dashboardData?.dashboard.analytics[0].completion_rate || 0}%`}
         />
         <StatsCard
           icon="📈"
-          label="Avg. Score"
-          value={`${dashboardData?.averageScore || 0}%`}
+          label="Pontuação Média"
+          value={dashboardData?.dashboard.analytics[0].avg_empathy_score || 0}
         />
       </div>
 
       {/* Leaderboard */}
       <Card>
-        <h2 className="text-2xl font-bold mb-6">Class Leaderboard</h2>
+        <h2 className="text-2xl font-bold mb-6">Classificações da Turma</h2>
 
         {leaderboard.length === 0 ? (
           <EmptyState
             icon="🏆"
-            title="No Students Yet"
-            description="Students will appear here as they complete scenarios and earn points."
+            title="Ainda não há alunos classificados"
+            description="Alunos vão aparecer aqui à medida que completam cenários e ganham pontos."
           />
         ) : (
           <div className="overflow-x-auto">
@@ -125,22 +128,22 @@ export default function TeacherDashboard() {
               <thead>
                 <tr className="border-b border-[var(--bg-tertiary)]">
                   <th className="text-left py-3 font-semibold text-[var(--text-secondary)]">
-                    Rank
+                    Ranque
                   </th>
                   <th className="text-left py-3 font-semibold text-[var(--text-secondary)]">
-                    Student
+                    Aluno
                   </th>
                   <th className="text-center py-3 font-semibold text-[var(--text-secondary)]">
-                    Points
+                    Pontos
                   </th>
                   <th className="text-center py-3 font-semibold text-[var(--text-secondary)]">
-                    Badges
+                    Crachás
                   </th>
                   <th className="text-center py-3 font-semibold text-[var(--text-secondary)]">
-                    Completed
+                    Completos
                   </th>
                   <th className="text-right py-3 font-semibold text-[var(--text-secondary)]">
-                    Progress
+                    Progresso
                   </th>
                 </tr>
               </thead>
@@ -198,7 +201,7 @@ export default function TeacherDashboard() {
 
       {/* Recent Activity */}
       <Card>
-        <h2 className="text-2xl font-bold mb-6">Recent Activity</h2>
+        <h2 className="text-2xl font-bold mb-6">Atividade Recente</h2>
 
         <div className="space-y-3">
           {dashboardData?.recentActivity?.map((activity, i) => (
@@ -215,7 +218,9 @@ export default function TeacherDashboard() {
               </div>
             </div>
           )) || (
-            <p className="text-[var(--text-secondary)]">No recent activity</p>
+            <p className="text-[var(--text-secondary)]">
+              Não há atividade recente
+            </p>
           )}
         </div>
       </Card>

@@ -140,10 +140,12 @@ export const useTeacher = () => {
     error: null,
   });
 
-  const getDashboard = useCallback(async () => {
+  const getDashboard = useCallback(async (id, school) => {
     setState({ data: null, loading: true, error: null });
     try {
-      const { data } = await apiClient.get("/teachers/dashboard");
+      const { data } = await apiClient.get(
+        `/teachers/dashboard?teacherId=${id}&school=${school}`,
+      );
       setState({ data, loading: false, error: null });
       return data;
     } catch (error) {
