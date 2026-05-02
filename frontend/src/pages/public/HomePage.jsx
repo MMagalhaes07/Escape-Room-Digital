@@ -23,23 +23,22 @@ export default function HomePage() {
               <>
                 <Button
                   variant="ghost"
-                  as={Link}
                   to={
                     user.role === "teacher"
                       ? "/teacher/dashboard"
                       : "/student/scenarios"
                   }
                 >
-                  Dashboard
+                  Painel
                 </Button>
               </>
             ) : (
               <>
-                <Button variant="ghost" as={Link} to="/login">
-                  Login
+                <Button variant="ghost" to="/login">
+                  Entrar
                 </Button>
-                <Button variant="primary" as={Link} to="/register">
-                  Sign Up
+                <Button variant="primary" to="/register">
+                  Criar Conta
                 </Button>
               </>
             )}
@@ -51,22 +50,22 @@ export default function HomePage() {
       <section className="container-main text-center py-20">
         <div className="mb-8">
           <h1 className="text-5xl font-bold mb-4 gradient-text">
-            Learn About Bullying & Cyberbullying
+            Aprenda sobre Cyberbullying e Discriminação
           </h1>
           <p className="text-xl text-[var(--text-secondary)] max-w-2xl mx-auto mb-8">
-            An interactive escape room experience designed to educate students
-            about the impacts and solutions to bullying in the digital age.
+            Uma experiência imersiva em sala de fuga projetada para educar
+            alunos sobre os impactos e soluções para o bullying na era digital.
           </p>
         </div>
 
         <div className="flex gap-4 justify-center mb-16">
           {!user && (
             <>
-              <Button as={Link} to="/register" size="lg">
-                Start Learning
+              <Button to="/register" size="lg">
+                Comece a Aprender
               </Button>
-              <Button as={Link} to="/login" variant="secondary" size="lg">
-                Already a Member
+              <Button to="/login" variant="secondary" size="lg">
+                Já é Membro
               </Button>
             </>
           )}
@@ -76,26 +75,28 @@ export default function HomePage() {
       {/* Features Section */}
       <section className="bg-[var(--bg-secondary)] py-16">
         <div className="container-main">
-          <h2 className="text-3xl font-bold text-center mb-12">How It Works</h2>
+          <h2 className="text-3xl font-bold text-center mb-12">
+            Como Funciona
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
               {
                 icon: <BookOpen className="w-8 h-8" />,
-                title: "Engaging Narratives",
+                title: "Narrativas Envolventes",
                 description:
-                  "Immersive scenarios that explore real bullying situations and their consequences.",
+                  "Cenários imersivos que exploram situações reais de bullying e suas consequências.",
               },
               {
                 icon: <Zap className="w-8 h-8" />,
-                title: "Interactive Puzzles",
+                title: "Puzzles Interativos",
                 description:
-                  "Solve challenging puzzles while making ethical decisions that matter.",
+                  "Resolva puzzles desafiadores enquanto toma decisões éticas que importam.",
               },
               {
                 icon: <Users className="w-8 h-8" />,
-                title: "Track Progress",
+                title: "Acompanhe o Progresso",
                 description:
-                  "Earn badges and compete on the leaderboard with your classmates.",
+                  "Ganhe crachás e compita no ranking com seus colegas.",
               },
             ].map((feature, i) => (
               <div key={i} className="card text-center">
@@ -114,14 +115,16 @@ export default function HomePage() {
 
       {/* CTA Section */}
       <section className="container-main py-16 text-center">
-        <h2 className="text-3xl font-bold mb-4">Ready to Make a Difference?</h2>
+        <h2 className="text-3xl font-bold mb-4">
+          Pronto para Fazer a Diferença?
+        </h2>
         <p className="text-[var(--text-secondary)] mb-8 max-w-2xl mx-auto">
-          Join students worldwide in learning about empathy, digital
-          responsibility, and standing up against bullying.
+          Junte-se a estudantes de todo o mundo para aprender sobre empatia,
+          responsabilidade digital e se opor ao bullying.
         </p>
         {!user && (
-          <Button as={Link} to="/register" size="lg">
-            Get Started Now
+          <Button to="/register" size="lg">
+            Comece Agora
           </Button>
         )}
       </section>
@@ -129,8 +132,8 @@ export default function HomePage() {
       {/* Footer */}
       <footer className="bg-[var(--bg-secondary)] border-t border-[var(--bg-tertiary)] py-8 text-center text-[var(--text-secondary)]">
         <p>
-          &copy; 2024 Escape Room Digital. Educational Platform for Bullying
-          Awareness.
+          &copy; 2024 Escape Room Digital. Plataforma Educacional para
+          Consciência sobre Bullying.
         </p>
       </footer>
     </div>

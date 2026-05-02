@@ -22,17 +22,21 @@ export const Card = ({ children, className = "" }) => {
   return <div className={`card ${className}`}>{children}</div>;
 };
 
-// Button Component
+// Button Component - Fixed: Now supports as={Link} for routing
+import { Link } from "react-router-dom";
+
 export const Button = ({
   children,
   variant = "primary",
   size = "md",
   disabled = false,
   className = "",
+  as = "button",
+  to,
   ...props
 }) => {
   const baseClass =
-    "font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2";
+    "font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2 inline-flex items-center justify-center";
 
   const variantClass = {
     primary: "btn-primary focus:ring-[var(--accent-blue)]",
@@ -49,12 +53,24 @@ export const Button = ({
     lg: "px-6 py-3 text-lg",
   }[size];
 
+  const className_final = `${baseClass} ${variantClass} ${sizeClass} ${className}`;
+
+  // Support as={Link} pattern or to prop for React Router navigation
+  if (as === Link || to) {
+    return (
+      <Link
+        to={to}
+        className={className_final}
+        style={{ textDecoration: "none", color: "inherit" }}
+        {...props}
+      >
+        {children}
+      </Link>
+    );
+  }
+
   return (
-    <button
-      className={`${baseClass} ${variantClass} ${sizeClass} ${className}`}
-      disabled={disabled}
-      {...props}
-    >
+    <button className={className_final} disabled={disabled} {...props}>
       {children}
     </button>
   );

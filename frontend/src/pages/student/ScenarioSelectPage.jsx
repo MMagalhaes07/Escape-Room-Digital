@@ -58,17 +58,17 @@ export default function ScenarioSelectPage() {
     return (
       <EmptyState
         icon="🎮"
-        title="No Scenarios Available"
-        description="Check back soon for more escape room scenarios."
+        title="Nenhum Cenário Disponível"
+        description="Volte em breve para mais cenários de sala de fuga."
       />
     );
   }
 
   return (
     <div>
-      <h1 className="text-3xl font-bold mb-2">Choose Your Challenge</h1>
+      <h1 className="text-3xl font-bold mb-2">Escolha seu Desafio</h1>
       <p className="text-[var(--text-secondary)] mb-8">
-        Select a scenario to begin your escape room experience
+        Selecione um cenário para começar sua experiência na sala de fuga
       </p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -86,35 +86,35 @@ export default function ScenarioSelectPage() {
             {/* Metadata */}
             <div className="grid grid-cols-3 gap-2 mb-6 text-sm py-4 border-y border-[var(--bg-tertiary)]">
               <div>
-                <div className="text-[var(--text-secondary)]">Difficulty</div>
+                <div className="text-[var(--text-secondary)]">Dificuldade</div>
                 <div className="font-medium">{scenario.difficulty}</div>
               </div>
               <div>
-                <div className="text-[var(--text-secondary)]">Duration</div>
+                <div className="text-[var(--text-secondary)]">Duração</div>
                 <div className="font-medium">{scenario.duration}</div>
               </div>
               <div>
-                <div className="text-[var(--text-secondary)]">Scenes</div>
+                <div className="text-[var(--text-secondary)]">Cenas</div>
                 <div className="font-medium">{scenario.scenes}</div>
               </div>
             </div>
 
-            {/* Action */}
+            {/* Action - Fixed: Button now properly centers icon and text with flex */}
             <Button
               onClick={() => handlePlay(scenario.id)}
               disabled={scenario.locked}
-              className="w-full"
+              className="w-full justify-center"
               variant={scenario.locked ? "secondary" : "primary"}
             >
               {scenario.locked ? (
                 <>
                   <Lock className="w-4 h-4 mr-2" />
-                  Locked
+                  Bloqueado
                 </>
               ) : (
                 <>
                   <Play className="w-4 h-4 mr-2" />
-                  Start Scenario
+                  Iniciar Cenário
                 </>
               )}
             </Button>

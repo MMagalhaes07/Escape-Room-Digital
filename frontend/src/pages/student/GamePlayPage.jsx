@@ -1,5 +1,6 @@
 /**
  * Game Play Page - Main game interface
+ * Features: Scene narrative rendering with Markdown support, choice selection, puzzle solving, clue system
  */
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
@@ -7,6 +8,7 @@ import { Card, Button, Alert, LoadingSpinner, Modal } from "@/components/ui";
 import { useGame } from "@/hooks/useAPI";
 import { useAuthStore } from "@/store/authStore";
 import { Volume2, VolumeX } from "lucide-react";
+import ReactMarkdown from "react-markdown";
 
 export default function GamePlayPage() {
   const { scenarioId } = useParams();
@@ -30,22 +32,34 @@ export default function GamePlayPage() {
   useEffect(() => {
     // Start game session
     if (user && scenarioId) {
-      startSession(user.id, scenarioId).then((data) => {
-        setSessionData(data.session);
-        setCurrentScene(
-          data.session.narrative.scenes[data.session.narrative.initialScene],
-        );
-      });
+      startSession(user.id, scenarioId)
+        .then((data) => {
+          setSessionData(data.session);
+          setCurrentScene(
+            data.session.narrative.scenes[data.session.narrative.initialScene],
+          );
+        })
+        .catch((error) => {
+          console.error("Failed to start game session:", error);
+        });
     }
   }, [user, scenarioId]);
 
   const handleChoice = async (choiceId, choice) => {
     try {
+      // Build proper payload with all required fields
+      const payload = {
+        sessionId: sessionData.id,
+        sceneId: currentScene.id || currentScene.passageName,
+        choiceId: choiceId,
+        userAnswer: choice.text || choice,
+      };
+
       const result = await recordDecision(
-        sessionData.id,
-        currentScene.id,
-        choiceId,
-        choice.text,
+        payload.sessionId,
+        payload.sceneId,
+        payload.choiceId,
+        payload.userAnswer,
       );
 
       // Update game state
@@ -59,7 +73,9 @@ export default function GamePlayPage() {
         setEndingReached(true);
       }
     } catch (error) {
-      console.error("Failed to record decision:", error);
+      console.error("Failed to record decision - Error:", error);
+      // Show user-friendly error message
+      alert("Erro ao processar sua escolha. Tente novamente.");
     }
   };
 
@@ -122,15 +138,18 @@ export default function GamePlayPage() {
       <div className="flex justify-between items-center bg-[var(--bg-secondary)] p-4 rounded-lg border border-[var(--bg-tertiary)]">
         <div className="flex gap-4">
           <div>
-            <div className="text-sm text-[var(--text-secondary)]">Progress</div>
+            <div className="text-sm text-[var(--text-secondary)]">
+              Progresso
+            </div>
             <div className="text-lg font-bold">
-              {sessionData.sceneCount} / {sessionData.totalScenes}
+              {sessionData.history.length} /{" "}
+              {Object.keys(sessionData.narrative.scenes).length}
             </div>
           </div>
           <div>
-            <div className="text-sm text-[var(--text-secondary)]">Points</div>
+            <div className="text-sm text-[var(--text-secondary)]">Pontos</div>
             <div className="text-lg font-bold text-[var(--accent-blue)]">
-              +{sessionData.points}
+              +{sessionData.scores.empathy}
             </div>
           </div>
         </div>
@@ -147,7 +166,7 @@ export default function GamePlayPage() {
             )}
           </button>
           <Button variant="secondary" onClick={() => setShowModal(true)}>
-            Exit Game
+            Sair do Jogo
           </Button>
         </div>
       </div>
@@ -162,15 +181,21 @@ export default function GamePlayPage() {
           </p>
         </div>
 
-        {/* Scene Content */}
-        <div className="mb-8">
-          <p className="text-lg leading-relaxed whitespace-pre-wrap">
-            {currentScene.text}
-          </p>
+        {/* Scene Content - With Markdown Rendering Support */}
+        <div className="mb-8 prose dark:prose-invert max-w-none">
+          {currentScene.text ? (
+            <div className="prose-content">
+              <ReactMarkdown className="text-lg leading-relaxed">
+                {currentScene.text}
+              </ReactMarkdown>
+            </div>
+          ) : null}
 
           {currentScene.narrative && (
-            <div className="mt-4 p-4 bg-[var(--bg-tertiary)] rounded-lg italic">
-              "{currentScene.narrative}"
+            <div className="mt-4 p-4 bg-[var(--bg-tertiary)] rounded-lg italic border-l-4 border-[var(--accent-blue)]">
+              <ReactMarkdown className="text-base">
+                {currentScene.narrative}
+              </ReactMarkdown>
             </div>
           )}
         </div>
@@ -185,7 +210,7 @@ export default function GamePlayPage() {
             <div className="space-y-2">
               <input
                 type="text"
-                placeholder="Enter your answer..."
+                placeholder="Digite sua resposta..."
                 className="input-field"
                 id="puzzle-input"
               />
@@ -196,7 +221,7 @@ export default function GamePlayPage() {
                 }}
                 variant="primary"
               >
-                Submit Answer
+                Enviar Resposta
               </Button>
             </div>
           </div>
@@ -210,14 +235,14 @@ export default function GamePlayPage() {
               variant="ghost"
               className="text-[var(--accent-blue)]"
             >
-              💡 Get a Clue
+              💡 Obter uma Pista
             </Button>
           </div>
         )}
 
         {currentScene.clueDiscovered && currentScene.clue && (
           <Alert type="info">
-            <strong>Clue:</strong> {currentScene.clue}
+            <strong>Pista:</strong> {currentScene.clue}
           </Alert>
         )}
 
@@ -225,7 +250,7 @@ export default function GamePlayPage() {
         {currentScene.choices && currentScene.choices.length > 0 && (
           <div className="space-y-3">
             <p className="font-semibold text-[var(--text-secondary)]">
-              What do you do?
+              O que você faz?
             </p>
             {currentScene.choices.map((choice, i) => (
               <Button
@@ -243,10 +268,10 @@ export default function GamePlayPage() {
         {/* Ending Display */}
         {endingReached && (
           <Alert type="success">
-            <h3 className="font-bold mb-2">Scenario Complete! 🎉</h3>
+            <h3 className="font-bold mb-2">Cenário Concluído! 🎉</h3>
             <p>
-              You've reached the end of this scenario. Check your badges and
-              progress!
+              Você chegou ao final deste cenário. Confira seus crachás e
+              progresso!
             </p>
           </Alert>
         )}
@@ -256,25 +281,25 @@ export default function GamePlayPage() {
       <Modal
         isOpen={showModal}
         onClose={() => setShowModal(false)}
-        title="Exit Game?"
+        title="Sair do Jogo?"
         size="sm"
       >
         <div className="space-y-4">
-          <p>Are you sure you want to exit? Your progress will be saved.</p>
+          <p>Tem certeza que deseja sair? Seu progresso será salvo.</p>
           <div className="flex gap-2">
             <Button
               onClick={() => setShowModal(false)}
               variant="secondary"
               className="flex-1"
             >
-              Continue Playing
+              Continuar Jogando
             </Button>
             <Button
               onClick={handleFinishGame}
               variant="primary"
               className="flex-1"
             >
-              Exit & Save
+              Sair e Salvar
             </Button>
           </div>
         </div>
