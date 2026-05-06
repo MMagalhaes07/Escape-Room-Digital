@@ -52,12 +52,12 @@ export default function RegisterPage() {
   };
 
   const gradeOptions = [
-    { value: "7", label: "7th Grade" },
-    { value: "8", label: "8th Grade" },
-    { value: "9", label: "9th Grade" },
-    { value: "10", label: "10th Grade" },
-    { value: "11", label: "11th Grade" },
-    { value: "12", label: "12th Grade" },
+    { value: "7", label: "7º Ano" },
+    { value: "8", label: "8º Ano" },
+    { value: "9", label: "9º Ano" },
+    { value: "10", label: "10º Ano" },
+    { value: "11", label: "11º Ano" },
+    { value: "12", label: "12º Ano" },
   ];
 
   return (
@@ -66,9 +66,9 @@ export default function RegisterPage() {
         {/* Header */}
         <div className="text-center mb-8">
           <div className="text-4xl mb-2">✨</div>
-          <h1 className="text-3xl font-bold mb-2">Create Account</h1>
+          <h1 className="text-3xl font-bold mb-2">Criar Conta</h1>
           <p className="text-[var(--text-secondary)]">
-            Join the digital escape room
+            Junte-se à sala de fuga digital
           </p>
         </div>
 
@@ -82,9 +82,9 @@ export default function RegisterPage() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <Input
-              label="Full Name"
+              label="Nome Completo"
               type="text"
-              placeholder="John Doe"
+              placeholder="Seu Nome"
               value={formData.name}
               onChange={(e) =>
                 setFormData({ ...formData, name: e.target.value })
@@ -95,7 +95,7 @@ export default function RegisterPage() {
             <Input
               label="Email"
               type="email"
-              placeholder="you@example.com"
+              placeholder="seu@email.com"
               value={formData.email}
               onChange={(e) =>
                 setFormData({ ...formData, email: e.target.value })
@@ -104,10 +104,10 @@ export default function RegisterPage() {
             />
 
             <Select
-              label="I am a..."
+              label="Sou um/a..."
               options={[
-                { value: "student", label: "Student" },
-                { value: "teacher", label: "Teacher" },
+                { value: "student", label: "Aluno/a" },
+                { value: "teacher", label: "Professor/a" },
               ]}
               value={formData.role}
               onChange={(e) =>
@@ -118,7 +118,7 @@ export default function RegisterPage() {
 
             {formData.role === "student" && (
               <Select
-                label="Grade"
+                label="Série"
                 options={gradeOptions}
                 value={formData.grade}
                 onChange={(e) =>
@@ -129,7 +129,7 @@ export default function RegisterPage() {
             )}
 
             <Input
-              label="Password"
+              label="Palavra-passe"
               type="password"
               placeholder="••••••••"
               value={formData.password}
@@ -140,7 +140,7 @@ export default function RegisterPage() {
             />
 
             <Input
-              label="Confirm Password"
+              label="Confirmar Palavra-passe"
               type="password"
               placeholder="••••••••"
               value={formData.passwordConfirm}
@@ -163,12 +163,12 @@ export default function RegisterPage() {
           {/* Sign In Link */}
           <div className="text-center">
             <p className="text-sm text-[var(--text-secondary)]">
-              Already have an account?{" "}
+              Já tem uma conta?{" "}
               <Link
                 to="/login"
                 className="text-[var(--accent-blue)] hover:underline"
               >
-                Sign in
+                Faça login
               </Link>
             </p>
           </div>

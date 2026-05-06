@@ -17,10 +17,10 @@ export default function ScenarioSelectPage() {
       setScenarios([
         {
           id: "scenario_1",
-          title: "Echo: The School Bullying",
+          title: "Echo: Bullying na Escola",
           description:
-            "Navigate through a school setting where bullying incidents unfold. Make choices that matter and discover the power of empathy.",
-          difficulty: "Beginner",
+            "Navegue por um ambiente escolar onde incidentes de bullying acontecem. Faça escolhas que importam e descubra o poder da empatia.",
+          difficulty: "Iniciante",
           duration: "15-20 min",
           scenes: 16,
           locked: false,
@@ -28,10 +28,10 @@ export default function ScenarioSelectPage() {
         },
         {
           id: "scenario_2",
-          title: "Clout: The Cruelty of Cyberbullying",
+          title: "Clout: A Crueldade do Cyberbullying",
           description:
-            "Explore the digital world and face the harsh reality of cyberbullying. Learn how words online can have real-world consequences.",
-          difficulty: "Intermediate",
+            "Explore o mundo digital e enfrente a realidade cruel do cyberbullying. Aprenda como palavras online podem ter consequências no mundo real.",
+          difficulty: "Intermediário",
           duration: "20-25 min",
           scenes: 18,
           locked: false,

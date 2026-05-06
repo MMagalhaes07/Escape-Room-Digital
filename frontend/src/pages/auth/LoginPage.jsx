@@ -27,7 +27,7 @@ export default function LoginPage() {
         navigate("/student/scenarios");
       }
     } catch (err) {
-      setLocalError(err.response?.data?.message || "Login failed");
+      setLocalError(err.response?.data?.message || "Falha no login");
     }
   };
 
@@ -39,7 +39,7 @@ export default function LoginPage() {
           <div className="text-4xl mb-2">🔐</div>
           <h1 className="text-3xl font-bold mb-2">Escape Room Digital</h1>
           <p className="text-[var(--text-secondary)]">
-            Bullying & Cyberbullying Awareness
+            Consciência de Bullying & Cyberbullying
           </p>
         </div>
 
@@ -55,7 +55,7 @@ export default function LoginPage() {
             <Input
               label="Email"
               type="email"
-              placeholder="you@example.com"
+              placeholder="seu@email.com"
               value={formData.email}
               onChange={(e) =>
                 setFormData({ ...formData, email: e.target.value })
@@ -64,7 +64,7 @@ export default function LoginPage() {
             />
 
             <Input
-              label="Password"
+              label="Palavra-passe"
               type="password"
               placeholder="••••••••"
               value={formData.password}
@@ -80,19 +80,19 @@ export default function LoginPage() {
               className="w-full"
               disabled={isLoading}
             >
-              {isLoading ? <LoadingSpinner size="sm" /> : "Login"}
+              {isLoading ? <LoadingSpinner size="sm" /> : "Entrar"}
             </Button>
           </form>
 
           {/* Sign Up Link */}
           <div className="text-center">
             <p className="text-sm text-[var(--text-secondary)]">
-              Don't have an account?{" "}
+              Não tem uma conta?{" "}
               <Link
                 to="/register"
                 className="text-[var(--accent-blue)] hover:underline"
               >
-                Sign up
+                Registre-se
               </Link>
             </p>
           </div>
@@ -101,11 +101,11 @@ export default function LoginPage() {
         {/* Info */}
         <div className="mt-6 p-4 bg-blue-100 dark:bg-blue-900 rounded-lg">
           <p className="text-sm text-blue-800 dark:text-blue-100">
-            <strong>Demo Credentials:</strong>
+            <strong>Credenciais para demonstração:</strong>
             <br />
-            Teacher: teacher@example.com / password
+            Professor: professor.silva@escola.pt / teacher123
             <br />
-            Student: student@example.com / password
+            Aluno: joao.santos@email.pt / student123
           </p>
         </div>
       </div>

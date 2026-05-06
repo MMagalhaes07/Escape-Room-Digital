@@ -1,16 +1,21 @@
 /**
  * NarrativeManager.js
- * 
+ *
  * Gerencia carregamento dinâmico de narrativas Twine
  * Suporta cache, validação e hot-reloading em desenvolvimento
  */
 
-import fs from 'fs';
-import path from 'path';
-import TwineParser from './TwineParser.js';
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+import TwineParser from "./TwineParser.js";
+
+// Suporte para ESM __dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 class NarrativeManager {
-  constructor(narrativeDir = path.join(__dirname, '../../narratives')) {
+  constructor(narrativeDir = path.join(__dirname, "../../narratives")) {
     this.narrativeDir = narrativeDir;
     this.cache = new Map();
     this.metadata = new Map();
@@ -24,12 +29,15 @@ class NarrativeManager {
   async loadAllNarratives() {
     try {
       if (!fs.existsSync(this.narrativeDir)) {
-        console.warn(`Diretório de narrativas não encontrado: ${this.narrativeDir}`);
+        console.warn(
+          `Diretório de narrativas não encontrado: ${this.narrativeDir}`,
+        );
         return {};
       }
 
-      const files = fs.readdirSync(this.narrativeDir)
-        .filter(f => f.endsWith('.twine') || f.endsWith('.twine.json'));
+      const files = fs
+        .readdirSync(this.narrativeDir)
+        .filter((f) => f.endsWith(".twine") || f.endsWith(".twine.json"));
 
       const narratives = {};
 
@@ -47,7 +55,7 @@ class NarrativeManager {
       this.loadedAt = new Date();
       return narratives;
     } catch (error) {
-      console.error('Erro ao carregar narrativas:', error);
+      console.error("Erro ao carregar narrativas:", error);
       return {};
     }
   }
@@ -63,16 +71,50 @@ class NarrativeManager {
       return this.cache.get(filename);
     }
 
-    const filePath = path.join(this.narrativeDir, filename);
+    let filePath = path.join(this.narrativeDir, filename);
 
     try {
-      const rawData = fs.readFileSync(filePath, 'utf-8');
+      // Tentar nome exato primeiro (com ou sem .json)
+      if (!fs.existsSync(filePath)) {
+        if (!filename.endsWith(".json")) {
+          filePath = path.join(this.narrativeDir, `${filename}.json`);
+        }
+      }
+
+      // Se ainda não existe, procurar por correspondência parcial na pasta
+      if (!fs.existsSync(filePath)) {
+        const files = fs.readdirSync(this.narrativeDir);
+        const baseName = filename.replace(/\.json$/i, "");
+
+        const matches = files.filter((f) => {
+          const fBase = f.replace(/\.json$/i, "");
+          return fBase.startsWith(baseName + "_") || fBase === baseName;
+        });
+
+        if (matches.length === 0) {
+          throw new Error(
+            `Narrativa não encontrada para "${filename}" em ${this.narrativeDir}`,
+          );
+        }
+
+        if (matches.length > 1) {
+          console.warn(
+            `Múltiplas narrativas correspondem a "${filename}": ${matches.join(", ")}. A usar o primeiro: ${matches[0]}`,
+          );
+        }
+
+        filePath = path.join(this.narrativeDir, matches[0]);
+      }
+
+      const rawData = fs.readFileSync(filePath, "utf-8");
       const twineData = JSON.parse(rawData);
 
       // Validar
       const validation = TwineParser.validateTwine(twineData);
       if (!validation.valid) {
-        throw new Error(`Ficheiro Twine inválido: ${validation.errors.join(', ')}`);
+        throw new Error(
+          `Ficheiro Twine inválido: ${validation.errors.join(", ")}`,
+        );
       }
 
       if (validation.warnings.length > 0) {
@@ -87,18 +129,19 @@ class NarrativeManager {
 
       narrative.analysis = analysis;
 
-      // Cache
+      // Cache (guardar pelo nome original do pedido para reutilização)
       this.cache.set(filename, narrative);
       this.metadata.set(filename, {
         loadedAt: new Date(),
         size: rawData.length,
         validation,
-        analysis
+        analysis,
+        resolvedFile: path.basename(filePath),
       });
 
       return narrative;
     } catch (error) {
-      console.error(`Erro ao parsejar ${filename}:`, error.message);
+      console.error(`Erro ao carregar narrativa "${filename}":`, error.message);
       throw error;
     }
   }
@@ -111,7 +154,9 @@ class NarrativeManager {
    */
   extractScenarioKey(filename) {
     const match = filename.match(/scenario_(\d+)/);
-    return match ? `scenario_${match[1]}` : filename.replace(/\.(twine|json)$/, '');
+    return match
+      ? `scenario_${match[1]}`
+      : filename.replace(/\.(twine|json)$/, "");
   }
 
   /**
@@ -136,7 +181,7 @@ class NarrativeManager {
   async reload() {
     this.cache.clear();
     this.metadata.clear();
-    console.log('Narrativas limpas do cache. Recarregando...');
+    console.log("Narrativas limpas do cache. Recarregando...");
     return this.loadAllNarratives();
   }
 
@@ -196,7 +241,7 @@ class NarrativeManager {
     const report = {
       valid: true,
       errors: [],
-      totalEmpathy: 0
+      totalEmpathy: 0,
     };
 
     const narrative = this.getNarrative(scenarioId);
@@ -219,13 +264,13 @@ class NarrativeManager {
       // Se não é a última cena, verificar se há transição válida
       if (i < scenePath.length - 1) {
         const nextScene = scenePath[i + 1];
-        const hasValidChoice = scene.choices.some(c => c.nextScene === nextScene);
+        const hasValidChoice = scene.choices.some(
+          (c) => c.nextScene === nextScene,
+        );
 
         if (!hasValidChoice) {
           report.valid = false;
-          report.errors.push(
-            `Transição inválida: ${sceneName} → ${nextScene}`
-          );
+          report.errors.push(`Transição inválida: ${sceneName} → ${nextScene}`);
         }
       }
     }
@@ -246,12 +291,13 @@ class NarrativeManager {
       title: narrative.title,
       sceneCount: Object.keys(narrative.scenes).length,
       puzzleCount: narrative.puzzles.length,
-      totalChoices: Object.values(narrative.scenes).reduce((sum, scene) => 
-        sum + (scene.choices?.length || 0), 0
+      totalChoices: Object.values(narrative.scenes).reduce(
+        (sum, scene) => sum + (scene.choices?.length || 0),
+        0,
       ),
       averageEmpathy: narrative.analysis?.averageEmpathy || 0,
       bestPathEmpathy: narrative.analysis?.bestPath?.empathy || 0,
-      worstPathEmpathy: narrative.analysis?.worstPath?.empathy || 0
+      worstPathEmpathy: narrative.analysis?.worstPath?.empathy || 0,
     };
 
     return stats;
@@ -288,9 +334,13 @@ class NarrativeManager {
       loadedAt: this.loadedAt,
       cacheSize: this.cache.size,
       narratives: this.listNarratives(),
-      metadata: Object.fromEntries(this.metadata)
+      metadata: Object.fromEntries(this.metadata),
     };
   }
 }
 
-export default NarrativeManager;
+// Exportar uma instância única (singleton)
+const narrativeManager = new NarrativeManager();
+
+export default narrativeManager;
+export { NarrativeManager };

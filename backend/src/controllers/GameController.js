@@ -13,7 +13,7 @@ import GameSessionModel from "../models/GameSessionModel.js";
 import GameDecisionModel from "../models/GameDecisionModel.js";
 import GameMetricsModel from "../models/GameMetricsModel.js";
 import GamificationModel from "../models/GamificationModel.js";
-import NarrativeManager from "../utils/NarrativeManager.js";
+import narrativeManager from "../utils/NarrativeManager.js";
 import GameState from "../utils/StateManager.js";
 import RealTimeManager from "../utils/RealTimeManager.js";
 import path from "path";
@@ -31,8 +31,12 @@ const __dirname = path.dirname(__filename);
  */
 function safeParseState(raw) {
   if (!raw) return {};
-  if (typeof raw === 'string') {
-    try { return JSON.parse(raw); } catch { return {}; }
+  if (typeof raw === "string") {
+    try {
+      return JSON.parse(raw);
+    } catch {
+      return {};
+    }
   }
   return raw; // já é objeto (comportamento padrão do pg com JSONB)
 }
@@ -40,10 +44,8 @@ function safeParseState(raw) {
 /**
  * Narrative Manager - Carrega narrativas de ficheiros Twine
  * Suporta hot-reloading em desenvolvimento
+ * Agora é um singleton importado de NarrativeManager
  */
-const narrativeManager = new NarrativeManager(
-  path.join(__dirname, "../../narratives"),
-);
 
 // Mapa de GameState por sessionId (em memória)
 const gameStates = new Map();
@@ -158,7 +160,18 @@ export class GameController {
         },
       });
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      console.error("❌ ERROR ao iniciar sessão de jogo:", {
+        userId: req.body.userId,
+        scenario: req.body.scenario,
+        error: error.message,
+        stack: error.stack,
+        code: error.code,
+      });
+      res.status(500).json({
+        error: error.message,
+        details: "Erro ao iniciar sessão de jogo. Por favor, tente novamente.",
+        code: error.code,
+      });
     }
   }
 
@@ -220,12 +233,10 @@ export class GameController {
 
       // Validar entrada
       if (!sessionId || !userId || !sceneId || !choiceText) {
-        return res
-          .status(400)
-          .json({
-            error:
-              "Missing required fields: sessionId, userId, sceneId, choiceText",
-          });
+        return res.status(400).json({
+          error:
+            "Missing required fields: sessionId, userId, sceneId, choiceText",
+        });
       }
 
       // Validar sessão
@@ -264,11 +275,9 @@ export class GameController {
         console.error(
           `Cenas disponíveis: ${Object.keys(narrative.scenes).join(", ")}`,
         );
-        return res
-          .status(404)
-          .json({
-            error: `Scene "${sceneId}" not found in scenario "${session.scenario}"`,
-          });
+        return res.status(404).json({
+          error: `Scene "${sceneId}" not found in scenario "${session.scenario}"`,
+        });
       }
 
       // Validar que scene tem choices array
@@ -291,11 +300,9 @@ export class GameController {
         console.error(
           `Escolhas disponíveis: ${scene.choices.map((c) => c.text).join(", ")}`,
         );
-        return res
-          .status(400)
-          .json({
-            error: `Invalid choice: "${choiceText}" not found in scene "${sceneId}"`,
-          });
+        return res.status(400).json({
+          error: `Invalid choice: "${choiceText}" not found in scene "${sceneId}"`,
+        });
       }
 
       // Registar decisão no GameState

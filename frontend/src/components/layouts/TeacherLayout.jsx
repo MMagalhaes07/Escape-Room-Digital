@@ -82,7 +82,7 @@ export const TeacherLayout = () => {
             className="w-full flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-red-500/20 transition-colors text-red-500"
           >
             <LogOut className="w-5 h-5" />
-            {sidebarOpen && <span className="text-sm">Logout</span>}
+            {sidebarOpen && <span className="text-sm">Sair</span>}
           </button>
         </div>
 

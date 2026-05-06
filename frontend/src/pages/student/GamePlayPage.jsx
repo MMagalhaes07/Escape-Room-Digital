@@ -1,309 +1,362 @@
 /**
- * Game Play Page - Main game interface
- * Features: Scene narrative rendering with Markdown support, choice selection, puzzle solving, clue system
+ * GamePlayPage.jsx
+ *
+ * Página principal de jogo
+ * Orquestra o fluxo completo:
+ * 1. Inicializa sessão
+ * 2. Carrega cena inicial
+ * 3. Renderiza cena + escolhas
+ * 4. Se puzzle: renderiza interface de puzzle
+ * 5. Ao chegar ao final: renderiza GameCompletion
+ * 6. Exporta CSV
  */
-import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { Card, Button, Alert, LoadingSpinner, Modal } from "@/components/ui";
-import { useGame } from "@/hooks/useAPI";
-import { useAuthStore } from "@/store/authStore";
-import { Volume2, VolumeX } from "lucide-react";
-import ReactMarkdown from "react-markdown";
 
-export default function GamePlayPage() {
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { useAuthStore } from "@/store/authStore";
+import { useGameStore } from "@/store/gameStore";
+import { usePlayerStore } from "@/store/playerStore";
+import { useUIStore } from "@/store/uiStore";
+import { API } from "@/services/api";
+
+// Components
+import SceneRenderer from "@/components/game/SceneRenderer";
+import ChoiceButtons from "@/components/game/ChoiceButtons";
+import Inventory from "@/components/game/Inventory";
+import PuzzleInterface from "@/components/game/PuzzleInterface";
+import SessionMetrics from "@/components/game/SessionMetrics";
+import GameCompletion from "@/components/game/GameCompletion";
+
+const GamePlayPage = () => {
   const { scenarioId } = useParams();
   const navigate = useNavigate();
+
+  // Stores
   const user = useAuthStore((state) => state.user);
-  const {
-    state: gameState,
-    startSession,
-    recordDecision,
-    completePuzzle,
-    discoverClue,
-    finishSession,
-  } = useGame();
+  const gameStore = useGameStore();
+  const playerStore = usePlayerStore();
+  const uiStore = useUIStore();
 
-  const [sessionData, setSessionData] = useState(null);
-  const [currentScene, setCurrentScene] = useState(null);
-  const [showModal, setShowModal] = useState(false);
-  const [soundEnabled, setSoundEnabled] = useState(true);
-  const [endingReached, setEndingReached] = useState(false);
+  // Local state
+  const [currentSceneData, setCurrentSceneData] = useState(null);
+  const [gameEnded, setGameEnded] = useState(false);
+  const [sessionResults, setSessionResults] = useState(null);
+  const [showPuzzle, setShowPuzzle] = useState(false);
 
+  /**
+   * Fase 1: Inicializar sessão ao montar componente
+   */
   useEffect(() => {
-    // Start game session
-    if (user && scenarioId) {
-      startSession(user.id, scenarioId)
-        .then((data) => {
-          setSessionData(data.session);
-          setCurrentScene(
-            data.session.narrative.scenes[data.session.narrative.initialScene],
-          );
-        })
-        .catch((error) => {
-          console.error("Failed to start game session:", error);
-        });
+    if (!user || !scenarioId) {
+      navigate("/login");
+      return;
     }
+
+    initializeGame();
   }, [user, scenarioId]);
 
-  const handleChoice = async (choiceId, choice) => {
+  /**
+   * Inicializar jogo
+   */
+  const initializeGame = async () => {
     try {
-      // Build proper payload with all required fields
-      const payload = {
-        sessionId: sessionData.id,
-        sceneId: currentScene.id || currentScene.passageName,
-        choiceId: choiceId,
-        userAnswer: choice.text || choice,
+      uiStore.setLoading(true, "Iniciando jogo...");
+
+      // 1. Carregar perfil de gamificação
+      await playerStore.loadProfile(user.id);
+
+      // 2. Iniciar sessão de jogo
+      const response = await gameStore.startSession(scenarioId, user.id);
+
+      // 3. Carregar cena inicial
+      if (response.session?.sessionId) {
+        const startNode = await API.narratives.getStart(
+          scenarioId,
+          response.session.sessionId,
+        );
+
+        console.log("Cena inicial carregada:", startNode);
+
+        setCurrentSceneData(startNode.data.node);
+
+        uiStore.showSuccess("🎮 Jogo iniciado! Boa sorte!");
+      }
+
+      uiStore.setLoading(false);
+    } catch (error) {
+      uiStore.showError(
+        error.response?.data?.error || "Erro ao iniciar jogo. Tente novamente.",
+      );
+      console.error("Erro ao inicializar jogo:", error);
+      setTimeout(() => navigate("/student/scenarios"), 2000);
+    }
+  };
+
+  /**
+   * Handler: Fazer uma escolha
+   */
+  const handleChoiceSelect = async (choiceIndex) => {
+    if (!currentSceneData || !gameStore.sessionId) {
+      uiStore.showError("Sessão inválida");
+      return;
+    }
+
+    try {
+      uiStore.setLoading(true, "Processando escolha...");
+
+      const response = await gameStore.makeDecision(
+        currentSceneData.id,
+        choiceIndex.toString(),
+      );
+
+      // Atualizar empatia do player baseado na escolha
+      const empathyDelta = response.data?.metrics?.empathyGained || 0;
+      playerStore.updateEmpathy(empathyDelta);
+      playerStore.updateScore(Math.abs(empathyDelta) * 10);
+
+      // Carregar próxima cena
+      const nextNode = response.data?.nextNode;
+      setCurrentSceneData(nextNode);
+
+      // Verificar se é nó final
+      if (
+        nextNode?.tags?.includes("ending") ||
+        nextNode?.tags?.includes("final")
+      ) {
+        await handleGameEnd();
+      }
+
+      // Se tem puzzle, preparar
+      if (nextNode?.puzzle) {
+        setShowPuzzle(true);
+      }
+
+      uiStore.setLoading(false);
+      uiStore.showSuccess("✓ Escolha registada!", "success", 2000);
+    } catch (error) {
+      uiStore.showError(
+        error.response?.data?.error || "Erro ao processar escolha",
+      );
+      uiStore.setLoading(false);
+    }
+  };
+
+  /**
+   * Handler: Resolver puzzle
+   */
+  const handlePuzzleSolve = async (answer) => {
+    if (!currentSceneData?.puzzle || !gameStore.sessionId) {
+      return;
+    }
+
+    try {
+      uiStore.setLoading(true, "Verificando resposta...");
+
+      const response = await gameStore.solvePuzzle(
+        currentSceneData.puzzle.id,
+        answer,
+      );
+
+      if (response.success) {
+        const score = response.data?.score || 50;
+        playerStore.updateScore(score);
+        playerStore.addBadge({
+          id: `puzzle_${currentSceneData.puzzle.id}`,
+          name: `Puzzle: ${currentSceneData.puzzle.title}`,
+          description: `Resolveste ${currentSceneData.puzzle.title}`,
+        });
+
+        uiStore.showSuccess("🎉 Puzzle resolvido!", "success", 3000);
+
+        // Fechar puzzle após 2s
+        setTimeout(() => {
+          setShowPuzzle(false);
+        }, 2000);
+      } else {
+        uiStore.showWarning(
+          "Resposta incorreta. Tenta de novo!",
+          "warning",
+          3000,
+        );
+      }
+
+      uiStore.setLoading(false);
+    } catch (error) {
+      uiStore.showError("Erro ao resolver puzzle");
+      uiStore.setLoading(false);
+    }
+  };
+
+  /**
+   * Handler: Terminar jogo
+   */
+  const handleGameEnd = async () => {
+    try {
+      const finishResult = await gameStore.finishSession();
+
+      // Determinar tipo de final baseado em empatia
+      let finalType = "neutral";
+      const empathy = gameStore.gameState?.total_empathy || 50;
+
+      if (empathy >= 60) {
+        finalType = "positive";
+        playerStore.addBadge({
+          id: "empath_master",
+          name: "Mestre da Empatia",
+          description: "Completaste um cenário com alta empatia",
+        });
+      } else if (empathy < 30) {
+        finalType = "negative";
+      }
+
+      // Registar conclusão
+      playerStore.completeScenario({
+        scenarioId,
+        finalType,
+        empathy,
+        score: gameStore.gameState?.total_empathy || 0,
+      });
+
+      // Preparar resultados
+      const results = {
+        scenario: scenarioId,
+        finalType,
+        empathy,
+        score: gameStore.gameState?.total_empathy || 0,
+        time: Date.now() - gameStore.sessionStartTime,
+        choices: gameStore.gameState?.choices_made || [],
+        puzzles: gameStore.gameState?.puzzles_solved || {},
+        sessionId: gameStore.sessionId,
       };
 
-      const result = await recordDecision(
-        payload.sessionId,
-        payload.sceneId,
-        payload.choiceId,
-        payload.userAnswer,
-      );
+      setSessionResults(results);
+      setGameEnded(true);
 
-      // Update game state
-      setSessionData(result.session);
-
-      if (result.nextScene) {
-        setCurrentScene(result.nextScene);
-      }
-
-      if (result.isEnding) {
-        setEndingReached(true);
-      }
+      playerStore.loadLeaderboard();
     } catch (error) {
-      console.error("Failed to record decision - Error:", error);
-      // Show user-friendly error message
-      alert("Erro ao processar sua escolha. Tente novamente.");
+      uiStore.showError("Erro ao finalizar jogo");
+      console.error("Erro ao terminar jogo:", error);
     }
   };
 
-  const handlePuzzleComplete = async (solution) => {
+  /**
+   * Handler: Exportar CSV
+   */
+  const handleExportCSV = async () => {
     try {
-      const result = await completePuzzle(
-        sessionData.id,
-        currentScene.puzzleId,
-        solution,
-      );
-      setSessionData(result.session);
-      // Move to next scene
-      if (result.nextScene) {
-        setCurrentScene(result.nextScene);
-      }
+      const blob = await API.metrics.exportCSV(gameStore.sessionId);
+      return blob;
     } catch (error) {
-      console.error("Failed to complete puzzle:", error);
+      uiStore.showError("Erro ao exportar CSV");
+      throw error;
     }
   };
 
-  const handleClueRequest = async () => {
-    try {
-      const result = await discoverClue(sessionData.id, currentScene.id);
-      setCurrentScene({
-        ...currentScene,
-        clueDiscovered: true,
-        clue: result.clue,
-      });
-    } catch (error) {
-      console.error("Failed to get clue:", error);
-    }
+  /**
+   * Handler: Voltar ao dashboard
+   */
+  const handleRestart = () => {
+    gameStore.resetSession();
+    navigate("/student/dashboard");
   };
 
-  const handleFinishGame = async () => {
-    try {
-      const result = await finishSession(sessionData.id);
-      setShowModal(false);
-      // Redirect with summary
-      setTimeout(() => {
-        navigate("/student/scenarios", {
-          state: { gameSummary: result.summary },
-        });
-      }, 1500);
-    } catch (error) {
-      console.error("Failed to finish session:", error);
-    }
-  };
+  // === RENDER ===
 
-  if (!currentScene || !sessionData) {
+  // Loading
+  if (uiStore.isLoading && !currentSceneData) {
     return (
-      <div className="flex justify-center items-center py-20">
-        <LoadingSpinner size="lg" />
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 to-slate-800">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-500 border-t-transparent mx-auto mb-4"></div>
+          <p className="text-white text-lg">{uiStore.loadingMessage}</p>
+        </div>
       </div>
     );
   }
 
-  return (
-    <div className="space-y-6">
-      {/* Top Bar */}
-      <div className="flex justify-between items-center bg-[var(--bg-secondary)] p-4 rounded-lg border border-[var(--bg-tertiary)]">
-        <div className="flex gap-4">
-          <div>
-            <div className="text-sm text-[var(--text-secondary)]">
-              Progresso
-            </div>
-            <div className="text-lg font-bold">
-              {sessionData.history.length} /{" "}
-              {Object.keys(sessionData.narrative.scenes).length}
-            </div>
-          </div>
-          <div>
-            <div className="text-sm text-[var(--text-secondary)]">Pontos</div>
-            <div className="text-lg font-bold text-[var(--accent-blue)]">
-              +{sessionData.scores.empathy}
-            </div>
-          </div>
-        </div>
+  // Game completed - show summary
+  if (gameEnded && sessionResults) {
+    return (
+      <GameCompletion
+        sessionResults={sessionResults}
+        onExport={handleExportCSV}
+        onRestart={handleRestart}
+      />
+    );
+  }
 
-        <div className="flex gap-2">
-          <button
-            onClick={() => setSoundEnabled(!soundEnabled)}
-            className="p-2 hover:bg-[var(--bg-tertiary)] rounded-lg"
-          >
-            {soundEnabled ? (
-              <Volume2 className="w-5 h-5" />
-            ) : (
-              <VolumeX className="w-5 h-5" />
-            )}
-          </button>
-          <Button variant="secondary" onClick={() => setShowModal(true)}>
-            Sair do Jogo
-          </Button>
-        </div>
-      </div>
+  // Game in progress
+  if (currentSceneData) {
+    return (
+      <div className="min-h-screen bg-slate-100">
+        {/* Metrics HUD */}
+        <SessionMetrics
+          metrics={{
+            empathy: gameStore.gameState?.total_empathy || 50,
+            score: gameStore.gameState?.choices_made?.length || 0,
+            decisionsCount: gameStore.gameState?.choices_made?.length || 0,
+            puzzlesCount: gameStore.gameState?.puzzles_solved?.length || 0,
+            puzzlesTotal: 5, // TODO: Get from scenario metadata
+          }}
+          sessionData={{
+            startTime: gameStore.sessionStartTime,
+          }}
+        />
 
-      {/* Main Game Area */}
-      <Card className="min-h-96">
-        {/* Scene Title */}
-        <div className="mb-6 pb-4 border-b border-[var(--bg-tertiary)]">
-          <h2 className="text-3xl font-bold">{currentScene.title}</h2>
-          <p className="text-[var(--text-secondary)] mt-1">
-            {currentScene.location}
-          </p>
-        </div>
+        {/* Main content area with padding for HUD */}
+        <div className="pt-48 pb-80">
+          <div className="max-w-4xl mx-auto px-4">
+            {/* Scene Renderer */}
+            <SceneRenderer
+              sceneData={currentSceneData}
+              inventory={gameStore.inventory}
+              isLoading={uiStore.isLoading}
+            />
 
-        {/* Scene Content - With Markdown Rendering Support */}
-        <div className="mb-8 prose dark:prose-invert max-w-none">
-          {currentScene.text ? (
-            <div className="prose-content">
-              <ReactMarkdown className="text-lg leading-relaxed">
-                {currentScene.text}
-              </ReactMarkdown>
-            </div>
-          ) : null}
-
-          {currentScene.narrative && (
-            <div className="mt-4 p-4 bg-[var(--bg-tertiary)] rounded-lg italic border-l-4 border-[var(--accent-blue)]">
-              <ReactMarkdown className="text-base">
-                {currentScene.narrative}
-              </ReactMarkdown>
-            </div>
-          )}
-        </div>
-
-        {/* Puzzle Section */}
-        {currentScene.hasPuzzle && (
-          <div className="mb-6 p-4 bg-yellow-100/20 border border-yellow-500/50 rounded-lg">
-            <h3 className="font-bold mb-2">
-              🧩 Puzzle: {currentScene.puzzle?.title}
-            </h3>
-            <p className="mb-4">{currentScene.puzzle?.description}</p>
-            <div className="space-y-2">
-              <input
-                type="text"
-                placeholder="Digite sua resposta..."
-                className="input-field"
-                id="puzzle-input"
+            {/* Puzzle Interface (if scene has puzzle) */}
+            {showPuzzle && currentSceneData.puzzle && (
+              <PuzzleInterface
+                puzzleData={currentSceneData.puzzle}
+                onSubmit={handlePuzzleSolve}
+                sessionId={gameStore.sessionId}
+                isLoading={uiStore.isLoading}
               />
-              <Button
-                onClick={() => {
-                  const answer = document.getElementById("puzzle-input")?.value;
-                  handlePuzzleComplete(answer);
-                }}
-                variant="primary"
-              >
-                Enviar Resposta
-              </Button>
-            </div>
-          </div>
-        )}
+            )}
 
-        {/* Clue Section */}
-        {currentScene.hasClues && !currentScene.clueDiscovered && (
-          <div className="mb-6">
-            <Button
-              onClick={handleClueRequest}
-              variant="ghost"
-              className="text-[var(--accent-blue)]"
-            >
-              💡 Obter uma Pista
-            </Button>
-          </div>
-        )}
-
-        {currentScene.clueDiscovered && currentScene.clue && (
-          <Alert type="info">
-            <strong>Pista:</strong> {currentScene.clue}
-          </Alert>
-        )}
-
-        {/* Choices Section */}
-        {currentScene.choices && currentScene.choices.length > 0 && (
-          <div className="space-y-3">
-            <p className="font-semibold text-[var(--text-secondary)]">
-              O que você faz?
-            </p>
-            {currentScene.choices.map((choice, i) => (
-              <Button
-                key={i}
-                onClick={() => handleChoice(i, choice)}
-                variant="secondary"
-                className="w-full text-left justify-start"
-              >
-                {choice.text}
-              </Button>
-            ))}
-          </div>
-        )}
-
-        {/* Ending Display */}
-        {endingReached && (
-          <Alert type="success">
-            <h3 className="font-bold mb-2">Cenário Concluído! 🎉</h3>
-            <p>
-              Você chegou ao final deste cenário. Confira seus crachás e
-              progresso!
-            </p>
-          </Alert>
-        )}
-      </Card>
-
-      {/* Exit Modal */}
-      <Modal
-        isOpen={showModal}
-        onClose={() => setShowModal(false)}
-        title="Sair do Jogo?"
-        size="sm"
-      >
-        <div className="space-y-4">
-          <p>Tem certeza que deseja sair? Seu progresso será salvo.</p>
-          <div className="flex gap-2">
-            <Button
-              onClick={() => setShowModal(false)}
-              variant="secondary"
-              className="flex-1"
-            >
-              Continuar Jogando
-            </Button>
-            <Button
-              onClick={handleFinishGame}
-              variant="primary"
-              className="flex-1"
-            >
-              Sair e Salvar
-            </Button>
+            {/* Inventory section */}
+            {gameStore.inventory.length > 0 && (
+              <div className="mt-8 mb-8">
+                <Inventory items={gameStore.inventory} />
+              </div>
+            )}
           </div>
         </div>
-      </Modal>
+
+        {/* Choice Buttons */}
+        <ChoiceButtons
+          choices={currentSceneData.choices || []}
+          onSelect={handleChoiceSelect}
+          disabled={uiStore.isLoading}
+          gameState={gameStore.gameState}
+        />
+      </div>
+    );
+  }
+
+  // Error state
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 to-slate-800">
+      <div className="text-center text-white">
+        <p className="text-xl mb-4">Erro ao carregar jogo</p>
+        <button
+          onClick={() => navigate("/student/scenarios")}
+          className="px-6 py-2 bg-blue-500 rounded-lg hover:bg-blue-600"
+        >
+          Voltar aos Cenários
+        </button>
+      </div>
     </div>
   );
-}
+};
+
+export default GamePlayPage;

@@ -92,9 +92,9 @@ export default function StudentListPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold mb-2">Students</h1>
+        <h1 className="text-3xl font-bold mb-2">Alunos</h1>
         <p className="text-[var(--text-secondary)]">
-          {filteredStudents.length} enrolled students
+          {filteredStudents.length} alunos inscritos
         </p>
       </div>
 
@@ -103,7 +103,7 @@ export default function StudentListPage() {
         <div className="relative">
           <Search className="absolute left-3 top-3 w-5 h-5 text-[var(--text-secondary)]" />
           <Input
-            placeholder="Search by name, email, or grade..."
+            placeholder="Pesquisar por nome, email ou série..."
             value={searchTerm}
             onChange={(e) => handleSearch(e.target.value)}
             className="pl-10"
@@ -115,8 +115,8 @@ export default function StudentListPage() {
       {filteredStudents.length === 0 ? (
         <EmptyState
           icon="👥"
-          title="No Students Found"
-          description="Search didn't match any students"
+          title="Nenhum Aluno Encontrado"
+          description="A busca não correspondeu a nenhum aluno"
         />
       ) : (
         <Card>
@@ -125,22 +125,22 @@ export default function StudentListPage() {
               <thead>
                 <tr className="border-b border-[var(--bg-tertiary)]">
                   <th className="text-left py-3 font-semibold text-[var(--text-secondary)]">
-                    Name
+                    Nome
                   </th>
                   <th className="text-left py-3 font-semibold text-[var(--text-secondary)]">
                     Email
                   </th>
                   <th className="text-center py-3 font-semibold text-[var(--text-secondary)]">
-                    Grade
+                    Série
                   </th>
                   <th className="text-center py-3 font-semibold text-[var(--text-secondary)]">
-                    Points
+                    Pontos
                   </th>
                   <th className="text-center py-3 font-semibold text-[var(--text-secondary)]">
-                    Completed
+                    Concluído
                   </th>
                   <th className="text-right py-3 font-semibold text-[var(--text-secondary)]">
-                    Actions
+                    Ações
                   </th>
                 </tr>
               </thead>
@@ -160,7 +160,7 @@ export default function StudentListPage() {
                     </td>
                     <td className="text-center py-3">
                       <span className="px-2 py-1 bg-[var(--bg-tertiary)] rounded">
-                        Grade {student.grade}
+                        {student.grade}º Ano
                       </span>
                     </td>
                     <td className="text-center py-3">
@@ -176,19 +176,19 @@ export default function StudentListPage() {
                         <button
                           onClick={() => handleViewDetails(student)}
                           className="p-2 hover:bg-[var(--bg-secondary)] rounded transition-colors"
-                          title="View Details"
+                          title="Ver Detalhes"
                         >
                           <Eye className="w-4 h-4" />
                         </button>
                         <button
                           className="p-2 hover:bg-[var(--bg-secondary)] rounded transition-colors"
-                          title="Edit"
+                          title="Editar"
                         >
                           <Edit className="w-4 h-4" />
                         </button>
                         <button
                           className="p-2 hover:bg-red-500/20 text-red-500 rounded transition-colors"
-                          title="Delete"
+                          title="Eliminar"
                         >
                           <Trash className="w-4 h-4" />
                         </button>

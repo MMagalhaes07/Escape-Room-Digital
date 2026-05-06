@@ -2,20 +2,12 @@
  * Reusable UI Components
  */
 
-// Loading Spinner
-export const LoadingSpinner = ({ size = "md" }) => {
-  const sizeClass = {
-    sm: "w-4 h-4",
-    md: "w-8 h-8",
-    lg: "w-12 h-12",
-  }[size];
-
-  return (
-    <div
-      className={`${sizeClass} border-4 border-[var(--bg-tertiary)] border-t-[var(--accent-blue)] rounded-full animate-spin`}
-    />
-  );
-};
+// Import novo LoadingSpinner (mais rico em features)
+export {
+  default as LoadingSpinner,
+  SkeletonLoader,
+  PulseLoader,
+} from "@/components/LoadingSpinner";
 
 // Card Component
 export const Card = ({ children, className = "" }) => {

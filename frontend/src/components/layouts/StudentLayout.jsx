@@ -79,7 +79,7 @@ export const StudentLayout = () => {
             <button
               onClick={handleLogout}
               className="p-2 hover:bg-red-500/20 rounded-lg transition-colors text-red-500"
-              title="Logout"
+              title="Sair"
             >
               <LogOut className="w-5 h-5" />
             </button>
