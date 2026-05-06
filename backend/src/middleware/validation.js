@@ -40,7 +40,7 @@ const SCHEMAS = {
   // Progresso narrativo
   narrativeProgress: {
     scenarioId: { type: "string", required: true, minLength: 1 },
-    nodeId: { type: "string", required: true, minLength: 1 },
+    currentNodeId: { type: "string", required: true, minLength: 1 },
   },
 
   // Paginação

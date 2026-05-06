@@ -75,9 +75,7 @@ const GamePlayPage = () => {
           response.session.sessionId,
         );
 
-        console.log("Cena inicial carregada:", startNode);
-
-        setCurrentSceneData(startNode.data.node);
+        setCurrentSceneData(startNode.data);
 
         uiStore.showSuccess("🎮 Jogo iniciado! Boa sorte!");
       }
@@ -105,7 +103,7 @@ const GamePlayPage = () => {
       uiStore.setLoading(true, "Processando escolha...");
 
       const response = await gameStore.makeDecision(
-        currentSceneData.id,
+        currentSceneData.node.id,
         choiceIndex.toString(),
       );
 
@@ -308,15 +306,15 @@ const GamePlayPage = () => {
           <div className="max-w-4xl mx-auto px-4">
             {/* Scene Renderer */}
             <SceneRenderer
-              sceneData={currentSceneData}
+              sceneData={currentSceneData.node}
               inventory={gameStore.inventory}
               isLoading={uiStore.isLoading}
             />
 
             {/* Puzzle Interface (if scene has puzzle) */}
-            {showPuzzle && currentSceneData.puzzle && (
+            {showPuzzle && currentSceneData.node.puzzle && (
               <PuzzleInterface
-                puzzleData={currentSceneData.puzzle}
+                puzzleData={currentSceneData.node.puzzle}
                 onSubmit={handlePuzzleSolve}
                 sessionId={gameStore.sessionId}
                 isLoading={uiStore.isLoading}

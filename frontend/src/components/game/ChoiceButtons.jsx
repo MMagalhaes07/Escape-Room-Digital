@@ -54,11 +54,11 @@ const ChoiceButtons = ({
    */
   const getRiskIcon = (risk) => {
     switch (risk?.toLowerCase()) {
-      case "high":
+      case "high_risk":
         return "⚠️";
-      case "medium":
+      case "medium_risk":
         return "⚡";
-      case "low":
+      case "none":
         return "✓";
       default:
         return "→";
@@ -155,7 +155,7 @@ ChoiceButtons.propTypes = {
       text: PropTypes.string.isRequired,
       nextScene: PropTypes.string,
       empathyScore: PropTypes.number,
-      risk: PropTypes.oneOf(["high", "medium", "low"]),
+      risk: PropTypes.oneOf(["high_risk", "medium_risk", "none"]),
       consequence: PropTypes.string,
     }),
   ),
